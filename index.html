@@ -5,9 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b0d14">
 <title>Tasarlıyo · Topluyo tasarım aracı</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
+<div id="hata" hidden></div>
+<script>
+window.addEventListener('error',function(e){var b=document.getElementById('hata');b.hidden=false;b.textContent='Hata: '+e.message+' ('+String(e.filename||'').split('/').pop()+':'+e.lineno+')'});
+window.addEventListener('unhandledrejection',function(e){var b=document.getElementById('hata');b.hidden=false;b.textContent='Hata: '+(e.reason&&e.reason.message||e.reason)});
+</script>
 <header>
   <h1>Tasarlıyo</h1>
   <p>Topluyo sohbet kartlarını tasarla, canlı dene, kodunu kopyala.</p>
@@ -45,7 +50,7 @@
 <div id="arayuz" hidden>
   <section class="soon"><h2>Arayüz Tasarla</h2><p class="big">Yakında…</p><p>Bu bölüm hazırlanıyor.</p></section>
 </div>
-<script src="registry.js"></script>
-<script src="app.js"></script>
+<script src="registry.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
