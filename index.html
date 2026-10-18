@@ -4,27 +4,47 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b0d14">
-<title>Tasarlıyo · Topluyo kart tasarım aracı</title>
+<title>Tasarlıyo · Topluyo tasarım aracı</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><h1>Tasarlıyo</h1><p>Topluyo sohbet kartlarını tasarla, <code>~{}</code> kodunu kopyala.</p></header>
+<header>
+  <h1>Tasarlıyo</h1>
+  <p>Topluyo sohbet kartlarını tasarla, canlı dene, kodunu kopyala.</p>
+  <nav>
+    <button class="tab on" data-t="metin">✍️ Metin Tasarla</button>
+    <button class="tab" data-t="arayuz">🧩 Arayüz Tasarla <small>yakında</small></button>
+  </nav>
+</header>
+
+<div id="metin">
 <main>
-<section><h2>Yapı</h2>
-  <div class="bar"><select id="addType"></select><button id="bAdd">+ Ekle</button><button id="bRow">+ Satır</button><button id="bZebra">Zebra</button></div>
-  <div id="tree"></div>
-  <div class="bar"><button id="bUp">↑</button><button id="bDown">↓</button><button id="bDup">Çoğalt</button><button id="bDel" class="red">Sil</button></div>
-</section>
-<section><h2>Özellikler</h2><div id="props"></div></section>
-<section><h2>Önizleme</h2><div id="pv"></div><p class="hint">Yaklaşık önizleme. Asıl görünüm Topluyo'da.</p></section>
-<section><h2>Çıktı</h2>
-  <textarea id="out" readonly rows="10"></textarea>
-  <div class="bar"><button id="bCopy" class="pri">Kopyala</button><label class="chk"><input type="checkbox" id="min"> Sıkıştır</label><button id="bPre">Rol tablosu örneği</button></div>
-  <h3>İçe aktar</h3>
-  <textarea id="imp" rows="3" placeholder="~{...} yapıştır"></textarea>
-  <div class="bar"><button id="bImp">Yükle</button><span id="err"></span></div>
-</section>
+  <section class="wide"><h2>Hazır şablonlar</h2><div class="bar" id="sablon"></div></section>
+  <section><h2>Yapı</h2>
+    <div class="bar"><select id="addType"></select><button id="bAdd">+ Ekle</button><button id="bRow">+ Satır</button><button id="bZebra">Zebra</button></div>
+    <div id="tree"></div>
+    <div class="bar"><button id="bUp">↑ Yukarı</button><button id="bDown">↓ Aşağı</button><button id="bDup">Çoğalt</button><button id="bDel" class="red">Sil</button></div>
+  </section>
+  <section><h2>Özellikler</h2><div id="props"></div></section>
+  <section><h2>Canlı test</h2>
+    <div id="chat"><div class="chead"># sohbet</div>
+      <div class="msg"><i class="av">S</i><div class="body"><b>sen</b> <small>şimdi</small><div id="pv"></div></div></div>
+    </div>
+    <div id="info"></div>
+    <div class="bar"><button id="bTest" class="pri">Kopyala ve Topluyo'yu aç</button></div>
+    <p class="hint">Yaklaşık görünümdür. Asıl sonuç Topluyo'da görünür.</p>
+  </section>
+  <section><h2>Kod (düzenlenebilir)</h2>
+    <textarea id="out" rows="12" spellcheck="false"></textarea>
+    <div class="bar"><button id="bCopy" class="pri">Kopyala</button><label class="chk"><input type="checkbox" id="min"> Sıkıştır</label></div>
+    <p class="hint">Koda yazdıkça ya da yapıştırdıkça kart canlı güncellenir.</p>
+  </section>
 </main>
+</div>
+
+<div id="arayuz" hidden>
+  <section class="soon"><h2>Arayüz Tasarla</h2><p class="big">Yakında…</p><p>Bu bölüm hazırlanıyor.</p></section>
+</div>
 <script src="registry.js"></script>
 <script src="app.js"></script>
 </body>
