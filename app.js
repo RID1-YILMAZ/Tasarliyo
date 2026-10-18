@@ -72,7 +72,6 @@ function props(){
   d.fields.forEach(fl=>b.append(row(fl.label,field(n,fl))));
   b.append(extras(n,new Set(['_id','type','children',...d.fields.map(x=>x.key)])));
 }
-const target=()=>{const f=find(selId);return def(f.n.type).container?f.n:(f.p||root)};
 function mv(d){const f=find(selId);if(!f.p)return;const a=f.p.children,i=a.indexOf(f.n),j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];out()}
 async function copy(btn,label){
   const t=$('#out');try{await navigator.clipboard.writeText(t.value)}catch{t.select();document.execCommand('copy')}
@@ -85,10 +84,26 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
 TEMPLATES.forEach(t=>$('#sablon').append(h('button',{onclick:()=>load(t.kur())},t.ad)));
 Object.keys(REGISTRY).forEach(t=>$('#addType').append(h('option',{value:t},REGISTRY[t].label+' ('+t+')')));
 $('#addType').append(h('option',{value:'__'},'Özel tür…'));
-on('#bAdd','click',()=>{let t=$('#addType').value;if(t==='__')t=(prompt('Tür adı:')||'').trim();if(!t)return;const p=target(),n=mk(t);(p.children=p.children||[]).push(n);selId=n._id;props();out()});
-on('#bRow','click',()=>{const n=tag(rowOf(['Başlık','#f97316'],['Açıklama',G]));root.children=root.children||[];root.children.push(n);zebra(root);selId=n._id;props();out()});
+// Ekleme: 'in' = seçilenin içine (alt öğe), 'after' = aynı seviyede hemen altına
+function add(n,mode){
+  const f=find(selId);
+  if(mode==='after'&&f.p){const a=f.p.children;a.splice(a.indexOf(f.n)+1,0,n)}
+  else{const p=def(f.n.type).container?f.n:(f.p||root);(p.children=p.children||[]).push(n)}
+  selId=n._id;props();out();
+}
+function addType(mode){let t=$('#addType').value;if(t==='__')t=(prompt('Tür adı:')||'').trim();if(t)add(mk(t),mode)}
+on('#bIn','click',()=>addType('in'));
+on('#bAfter','click',()=>addType('after'));
+on('#bRow','click',()=>{
+  const n=tag(rowOf(['Başlık','#f97316'],['Açıklama',G])),f=find(selId);
+  if(f.p){let c=f;while(c.p!==root)c=find(c.p._id);const a=root.children;a.splice(a.indexOf(c.n)+1,0,n)}
+  else(root.children=root.children||[]).push(n);
+  zebra(root);selId=n._id;props();out();
+});
 on('#bZebra','click',()=>{zebra(root);props();out()});
 on('#bUp','click',()=>mv(-1));on('#bDown','click',()=>mv(1));
+on('#bInd','click',()=>{const f=find(selId);if(!f.p)return;const a=f.p.children,i=a.indexOf(f.n);if(i<1||!def(a[i-1].type).container)return;a.splice(i,1);(a[i-1].children=a[i-1].children||[]).push(f.n);props();out()});
+on('#bOut','click',()=>{const f=find(selId);if(!f.p||f.p===root)return;const g=find(f.p._id);f.p.children.splice(f.p.children.indexOf(f.n),1);g.p.children.splice(g.p.children.indexOf(g.n)+1,0,f.n);props();out()});
 on('#bDup','click',()=>{const f=find(selId);if(!f.p)return;const c=structuredClone(f.n);tag(c);f.p.children.splice(f.p.children.indexOf(f.n)+1,0,c);selId=c._id;props();out()});
 on('#bDel','click',()=>{const f=find(selId);if(!f.p)return;f.p.children.splice(f.p.children.indexOf(f.n),1);selId=f.p._id;props();out()});
 on('#bCopy','click',e=>copy(e.target,'Kopyala'));

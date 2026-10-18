@@ -26,9 +26,11 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
 <main>
   <section class="wide"><h2>Hazır şablonlar</h2><div class="bar" id="sablon"></div></section>
   <section><h2>Yapı</h2>
-    <div class="bar"><select id="addType"></select><button id="bAdd">+ Ekle</button><button id="bRow">+ Satır</button><button id="bZebra">Zebra</button></div>
+    <div class="bar"><select id="addType"></select></div>
+    <div class="bar"><button id="bIn">+ İçine ekle</button><button id="bAfter">+ Altına ekle</button><button id="bRow">+ Satır</button><button id="bZebra">Zebra</button></div>
+    <p class="hint" style="margin:0 0 8px"><b>İçine:</b> seçili öğenin alt öğesi olur. <b>Altına:</b> aynı seviyede, seçilenin hemen altına gelir.</p>
     <div id="tree"></div>
-    <div class="bar"><button id="bUp">↑ Yukarı</button><button id="bDown">↓ Aşağı</button><button id="bDup">Çoğalt</button><button id="bDel" class="red">Sil</button></div>
+    <div class="bar"><button id="bUp">↑ Yukarı</button><button id="bDown">↓ Aşağı</button><button id="bOut">← Dışarı al</button><button id="bInd">→ İçeri al</button><button id="bDup">Çoğalt</button><button id="bDel" class="red">Sil</button></div>
   </section>
   <section><h2>Özellikler</h2><div id="props"></div></section>
   <section><h2>Canlı test</h2>
@@ -51,6 +53,6 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
   <section class="soon"><h2>Arayüz Tasarla</h2><p class="big">Yakında…</p><p>Bu bölüm hazırlanıyor.</p></section>
 </div>
 <script src="registry.js?v=3"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
