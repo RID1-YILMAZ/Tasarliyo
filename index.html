@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b0d14">
 <title>Tasarlıyo · Topluyo tasarım aracı</title>
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <div id="hata" hidden></div>
@@ -33,9 +33,13 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
     <div class="bar"><button id="bUp">↑ Yukarı</button><button id="bDown">↓ Aşağı</button><button id="bOut">← Dışarı al</button><button id="bInd">→ İçeri al</button><button id="bDup">Çoğalt</button><button id="bDel" class="red">Sil</button></div>
   </section>
   <section><h2>Özellikler</h2><div id="props"></div></section>
+  <section><h2>Mesaj yazısı</h2>
+    <label class="f"><span>Kartın üstündeki yazı</span><textarea id="preT" rows="2" placeholder="isteğe bağlı"></textarea></label>
+    <label class="f"><span>Kartın altındaki yazı (ör. **[Katıl](https://...)**)</span><textarea id="postT" rows="2" placeholder="isteğe bağlı"></textarea></label>
+  </section>
   <section><h2>Canlı test</h2>
     <div id="chat"><div class="chead"># sohbet</div>
-      <div class="msg"><i class="av">S</i><div class="body"><b>sen</b> <small>şimdi</small><div id="pv"></div></div></div>
+      <div class="msg"><i class="av">S</i><div class="body"><b>sen</b> <small>şimdi</small><div id="preV"></div><div id="pv"></div><div id="postV"></div></div></div>
     </div>
     <div id="info"></div>
     <div class="bar"><button id="bTest" class="pri">Kopyala ve Topluyo'yu aç</button></div>
@@ -44,7 +48,7 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
   <section><h2>Kod (düzenlenebilir)</h2>
     <textarea id="out" rows="12" spellcheck="false"></textarea>
     <div class="bar"><button id="bCopy" class="pri">Kopyala</button><label class="chk"><input type="checkbox" id="min"> Sıkıştır</label></div>
-    <p class="hint">Koda yazdıkça ya da yapıştırdıkça kart canlı güncellenir.</p>
+    <p class="hint">Koda yazdıkça ya da yapıştırdıkça kart canlı güncellenir. Başında/sonunda yazı olan mesajları da yapıştırabilirsin.</p>
   </section>
 </main>
 </div>
@@ -52,7 +56,7 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
 <div id="arayuz" hidden>
   <section class="soon"><h2>Arayüz Tasarla</h2><p class="big">Yakında…</p><p>Bu bölüm hazırlanıyor.</p></section>
 </div>
-<script src="registry.js?v=3"></script>
-<script src="app.js?v=4"></script>
+<script src="registry.js?v=5"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
