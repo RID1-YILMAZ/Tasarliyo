@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#0b0d14">
 <title>Tasarlıyo · Topluyo tasarım aracı</title>
 <link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="tema.css?v=8">
 </head>
 <body>
 <div id="hata" hidden></div>
@@ -15,9 +16,10 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
 </script>
 <header>
   <h1>Tasarlıyo</h1>
-  <p>Topluyo sohbet kartlarını tasarla, canlı dene, kodunu kopyala.</p>
+  <p>Topluyo sohbet kartlarını ve temalarını tasarla, canlı dene, kodunu kopyala.</p>
   <nav>
     <button class="tab on" data-t="metin">✍️ Metin Tasarla</button>
+    <button class="tab" data-t="tema">🎨 Tema Tasarla</button>
     <button class="tab" data-t="arayuz">🧩 Arayüz Tasarla <small>yakında</small></button>
   </nav>
 </header>
@@ -53,10 +55,49 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
 </main>
 </div>
 
+<div id="tema" hidden>
+  <img class="t-banner" src="https://banner.topluyo.com/?text=topluyo.com" alt="topluyo.com" onerror="this.remove()">
+  <div class="t-wrap">
+    <aside class="t-editor">
+      <div class="t-top"><b>CSS Editör</b><button id="t-reset-all">Varsayılan</button><button id="t-add">+ Seçici</button></div>
+      <div id="t-list"></div>
+    </aside>
+    <section class="t-stage">
+      <div class="t-tools">
+        <button id="t-copy" class="pri">Kopyala</button>
+        <div class="t-popwrap"><button id="t-class">Class ▾</button><div id="t-pop"></div></div>
+        <button id="t-b-css">CSS</button>
+        <button id="t-b-pv" class="on">Önizleme</button>
+        <button id="t-all">Hepsini uygula</button>
+        <label class="chk"><input type="checkbox" id="t-imp" checked> !important</label>
+        <label class="chk"><input type="checkbox" id="t-min"> Sıkıştır</label>
+        <span id="t-sum"></span>
+      </div>
+      <div class="t-view">
+        <div id="t-pv"><iframe id="t-frame" title="Topluyo önizleme"></iframe></div>
+        <textarea id="t-css" readonly hidden spellcheck="false" placeholder="Bir etiketin yanındaki Uygula'ya basınca CSS burada birikir."></textarea>
+      </div>
+      <p class="hint">Önizleme Topluyo'nun taklididir. Hover/odak gibi durumları görmek için önizlemede o öğenin üstüne gel ya da dokun.</p>
+    </section>
+  </div>
+  <div class="t-modal" id="t-wall" hidden>
+    <div class="t-mbox">
+      <div class="bar"><b>Duvar kâğıdı seç</b><a href="https://unsplash.com/t/wallpapers" target="_blank" rel="noopener">Unsplash</a><a href="https://picsum.photos/" target="_blank" rel="noopener">Picsum</a><button id="t-wall-x">Kapat</button></div>
+      <div id="t-wall-grid"></div>
+    </div>
+  </div>
+</div>
+
 <div id="arayuz" hidden>
   <section class="soon"><h2>Arayüz Tasarla</h2><p class="big">Yakında…</p><p>Bu bölüm hazırlanıyor.</p></section>
 </div>
 <script src="registry.js?v=6"></script>
 <script src="app.js?v=6"></script>
+<script src="tema-veri.js?v=8"></script>
+<script src="tema-ozellik.js?v=8"></script>
+<script src="tema-onizleme.js?v=8"></script>
+<script src="tema-denetim.js?v=8"></script>
+<script src="tema-cekirdek.js?v=8"></script>
+<script src="tema.js?v=8"></script>
 </body>
 </html>
