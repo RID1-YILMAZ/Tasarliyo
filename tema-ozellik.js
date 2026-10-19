@@ -6,8 +6,7 @@ const _n=(k,l,min,max,step)=>({k,l,t:'num',min,max,step});
 const _SIDE=[['top','Üst'],['right','Sağ'],['bottom','Alt'],['left','Sol']];
 const _SZ=['px','%','vw','vh','em','rem','auto'];
 const TM_PROPS=[
-  {g:'Renkler',open:1,p:[_c('color','Yazı rengi'),_c('background-color','Arka plan rengi'),_n('opacity','Saydamlık',0,1,.05)]},
-  {g:'Arka plan görseli',p:[{k:'background-image',l:'Arka plan görseli',t:'bgimg'},
+  {g:'Arka plan ayarları (boyut, konum, tekrar)',p:[
     _s('background-size','Boyut',['auto','cover','contain','100% 100%']),
     _s('background-position','Konum',['center','top','bottom','left','right','top left','top right','bottom left','bottom right']),
     _s('background-repeat','Tekrar',['no-repeat','repeat','repeat-x','repeat-y']),
@@ -24,7 +23,7 @@ const TM_PROPS=[
   {g:'Kenarlık',p:[{k:'border',l:'Dört kenar',t:'border'},..._SIDE.map(([s,l])=>({k:'border-'+s,l:l+' kenar',t:'border'})),{k:'outline',l:'Dış çizgi (outline)',t:'border'}]},
   {g:'Köşe yuvarlama',p:[_l('border-radius','Tüm köşeler',0,60,['px','%','em']),
     ...[['top-left','Sol üst'],['top-right','Sağ üst'],['bottom-right','Sağ alt'],['bottom-left','Sol alt']].map(([s,l])=>_l('border-'+s+'-radius',l,0,60,['px','%','em']))]},
-  {g:'Gölge & efekt',p:[{k:'box-shadow',l:'Kutu gölgesi',t:'shadow'},{k:'filter',l:'Filtre',t:'fx'},{k:'backdrop-filter',l:'Arka plan filtresi (cam efekti)',t:'fx'},
+  {g:'Gölge & efekt',p:[_n('opacity','Saydamlık',0,1,.05),{k:'box-shadow',l:'Kutu gölgesi',t:'shadow'},{k:'filter',l:'Filtre',t:'fx'},{k:'backdrop-filter',l:'Arka plan filtresi (cam efekti)',t:'fx'},
     _s('mix-blend-mode','Karışım modu',['normal','multiply','screen','overlay','difference','lighten','darken']),
     {k:'transform',l:'Dönüşüm (kaydır / döndür / ölçekle)',t:'transform'},{k:'transition',l:'Geçiş süresi',t:'trans'},
     _s('cursor','İmleç',['default','pointer','text','move','not-allowed','grab','crosshair','help','wait']),_s('pointer-events','Tıklanabilirlik',['auto','none'])]},

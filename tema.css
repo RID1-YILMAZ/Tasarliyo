@@ -10,7 +10,10 @@
 .t-name small{color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
 .t-apply.on{background:#166534;border-color:#166534}
 .t-box.shut .t-bodyx{display:none}.t-bodyx{margin-top:8px}
-.t-bar{margin:0 0 8px}.t-bar select{width:100%}
+.t-states{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
+.t-st{padding:5px 10px;font-size:12px;border-radius:999px}.t-st.on{background:var(--ac);border-color:var(--ac)}.t-st.has::after{content:' •';color:#4ade80}
+.t-quick{border:1px dashed var(--line);border-radius:10px;padding:6px 8px;margin:8px 0}.t-quick .hint{margin:0 0 4px}
+.t-box{transition:outline-color .3s}.t-box.pick{outline:2px solid #3b82f6;outline-offset:2px}
 .t-g{border:1px solid var(--line);border-radius:8px;margin:6px 0;padding:6px 8px}
 .t-g summary{cursor:pointer;font-size:13px;color:var(--mut)}
 .t-f{margin:8px 0;min-width:0}.t-f>label{display:flex;gap:6px;font-size:12px;color:var(--mut);margin-bottom:3px;align-items:center}
@@ -39,6 +42,7 @@
   .t-wrap{grid-template-columns:minmax(0,1fr)}
   .t-stage{order:-1;top:0;z-index:20;background:var(--bg);padding-top:6px}
   .t-editor{position:static;height:auto;overflow:visible}
+  .t-box{scroll-margin-top:calc(40vh + 160px)}
   #t-pv,#t-css{height:40vh;min-height:240px}
   .t-view+.hint{display:none}
 }

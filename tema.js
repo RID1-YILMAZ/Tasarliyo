@@ -1,11 +1,19 @@
 // TEMA ARAYÜZÜ: etiket kutuları, önizleme, düğmeler
 (()=>{
-const {S,save,ST,entries,any,keys,HEX,cssOf,fr,$t,live,flash,upd,refCss,done,setP,apply,reset,cascadeNow}=TMC;
+const {S,save,ST,entries,any,keys,HEX,cssOf,fr,$t,live,flash,upd,refCss,done,setP,apply,reset,cascadeNow,setCur}=TMC;
+function regroup(e,g){
+  const b=document.querySelector('#tb-'+e.id+' .t-bodyx');if(!b)return;
+  const d=[...b.querySelectorAll('details.t-g')].find(x=>x.firstChild.textContent.startsWith(g.g));if(!d)return;
+  const m=ST(e.id).d[ST(e.id).st]||{},n=g.p.filter(q=>m[q.k]!==undefined).length;
+  d.firstChild.textContent=g.g+(n?'  •'+n:'');
+  if(d.dataset.f){d.querySelectorAll('.t-f').forEach(r=>r.remove());g.p.forEach(q=>d.append(prow(e,q)))}
+}
 function prow(e,p){
   const t=ST(e.id),get=()=>(t.d[t.st]||{})[p.k];
+  const x={other:(k,v)=>setP(e,k,v),has:k=>(t.d[t.st]||{})[k]!==undefined,refresh:()=>regroup(e,TM_PROPS.find(g=>g.p.some(q=>q.k==='background-size')))};
   const w=h('div',{class:'t-f'}),lab=h('label',{class:get()!==undefined?'on':''},p.l+' ',
     h('button',{class:'x',title:'temizle',onclick:()=>{setP(e,p.k,null);w.replaceWith(prow(e,p))}},'✕'));
-  w.append(lab,TM_CTL[p.t](p,get(),v=>{setP(e,p.k,v);lab.classList.toggle('on',get()!==undefined)}));
+  w.append(lab,TM_CTL[p.t](p,get(),v=>{setP(e,p.k,v);lab.classList.toggle('on',get()!==undefined)},x));
   return w;
 }
 function extras(e){
@@ -21,7 +29,7 @@ function varsUI(e){
   const m=S.vars.d,out=[h('p',{class:'hint'},'Topluyo ön yüzü bu değişkenleri kullanıyorsa tüm temayı tek yerden değiştirir (önizleme taklidi kullanıyor). Boş bırakılanlar çıktıya girmez.')];
   TM_VARS.forEach(([k,l,d])=>{
     const t=h('input',{value:m[k]||'',placeholder:d}),c=h('input',{type:'color',value:HEX.test(m[k]||'')?m[k]:(HEX.test(d)?d:'#000000')});
-    t.oninput=()=>{setP(e,k,t.value);if(HEX.test(t.value))c.value=t.value};c.oninput=()=>{t.value=c.value;setP(e,k,c.value)};
+    t.oninput=()=>{setP(e,k,t.value);if(HEX.test(t.value))c.value=t.value};c.oninput=c.onchange=()=>{t.value=c.value;setP(e,k,c.value)};
     out.push(h('div',{class:'t-f'},h('label',{class:m[k]?'on':''},l+' ('+k+')'),h('div',{class:'t-cr'},c,t)));
   });
   const known=new Set(TM_VARS.map(x=>x[0]));
@@ -35,16 +43,24 @@ function fillBody(e,body){
   body=body||document.querySelector('#tb-'+e.id+' .t-bodyx');if(!body)return;
   body.innerHTML='';
   if(e.vars){body.append(...varsUI(e));return}
-  const t=ST(e.id);
-  const sel=h('select',{onchange:()=>{t.st=sel.value;save();fillBody(e)}},...TM_STATES.map(([s,l])=>h('option',{value:s,selected:s===t.st},(any(t.d[s])?'• ':'')+l)));
-  body.append(h('div',{class:'t-bar'},sel),
-    h('label',{class:'chk'},h('input',{type:'checkbox',checked:t.cascade,onchange:ev=>{t.cascade=ev.target.checked;if(t.cascade)cascadeNow(e);save()}}),' Renk/arka planı aşağıdaki etiketlere de uygula'));
+  const t=ST(e.id),main=TM_STATES.slice(0,4),rest=TM_STATES.slice(4),inRest=rest.some(r=>r[0]===t.st);
+  const go=s=>{t.st=s;save();fillBody(e);setCur(e)};
+  const chips=h('div',{class:'t-states'},...main.map(([s,l])=>h('button',{class:'t-st'+(t.st===s?' on':'')+(any(t.d[s])?' has':''),'data-s':s,title:l,onclick:()=>go(s)},l.split(' ')[0])),
+    h('select',{class:'t-st'+(inRest?' on':''),onchange:ev=>{if(ev.target.value!=='__')go(ev.target.value)}},
+      h('option',{value:'__',selected:!inRest},'Diğer…'),...rest.map(([s,l])=>h('option',{value:s,'data-s':s,selected:s===t.st},(any(t.d[s])?'• ':'')+l))));
+  const dur=TM_STATES.find(s=>s[0]===t.st)[1];
+  body.append(chips,
+    h('label',{class:'chk'},h('input',{type:'checkbox',checked:t.cascade,onchange:ev=>{t.cascade=ev.target.checked;if(t.cascade)cascadeNow(e);save()}}),' Renk/arka planı aşağıdaki etiketlere de uygula'),
+    h('div',{class:'t-quick'},h('div',{class:'hint'},'Düzenlenen durum: '+dur),
+      prow(e,{k:'color',l:'Yazı rengi',t:'color'}),prow(e,{k:'background-color',l:'Arka plan rengi',t:'color'}),
+      prow(e,{k:'background-image',l:'Arka plan görseli (fotoğraf linki)',t:'bgimg'})));
   const m=t.d[t.st]||{};
+  const og=t.og||(t.og={});
   TM_PROPS.forEach(g=>{
     const n=g.p.filter(p=>m[p.k]!==undefined).length,d=h('details',{class:'t-g'},h('summary',{},g.g+(n?'  •'+n:'')));
     const fill=()=>{if(!d.dataset.f){d.dataset.f=1;g.p.forEach(p=>d.append(prow(e,p)))}};
-    d.addEventListener('toggle',()=>{if(d.open)fill()});
-    if(g.open||n){d.open=true;fill()}
+    d.addEventListener('toggle',()=>{og[g.g]=d.open;if(d.open)fill()});
+    if(g.open||n||og[g.g]){d.open=true;fill()}
     body.append(d);
   });
   body.append(extras(e));
@@ -64,13 +80,13 @@ function mkBox(e){
 function toggle(e){
   const t=ST(e.id),el=document.getElementById('tb-'+e.id);t.open=!t.open;
   el.classList.toggle('shut',!t.open);el.querySelector('.t-tg').textContent=t.open?'▲':'▼';
-  if(t.open)fillBody(e);else el.querySelector('.t-bodyx').innerHTML='';
+  if(t.open){fillBody(e);setCur(e)}else{el.querySelector('.t-bodyx').innerHTML='';if(TMC.cur()&&TMC.cur().id===e.id)setCur(null)}
   save();flash(e);
 }
 function renderAll(){
   $t('#t-list').replaceChildren(...entries().map(mkBox));
   $t('#t-pop').replaceChildren(...entries().map(e=>h('button',{onclick:()=>{
-    if(!ST(e.id).open)toggle(e);document.getElementById('tb-'+e.id).scrollIntoView({block:'start'});$t('#t-pop').classList.remove('open')}},e.sel)));
+    jump(e);$t('#t-pop').classList.remove('open')}},e.sel)));
   upd();
 }
 function addCustom(){
@@ -88,7 +104,19 @@ function resetAll(){
 const pv=$t('#t-pv');
 function fit(){const w=pv.clientWidth,hh=pv.clientHeight;if(!w)return;const W=w>=1000?w:1000,s=w/W;fr.style.width=W+'px';fr.style.height=(hh/s)+'px';fr.style.transform='scale('+s+')'}
 new ResizeObserver(fit).observe(pv);
-fr.addEventListener('load',()=>{live();fit()});
+function jump(e){
+  const t=ST(e.id);if(!t.open)toggle(e);else setCur(e);
+  const b=document.getElementById('tb-'+e.id);b.scrollIntoView({block:'start',behavior:'smooth'});
+  b.classList.add('pick');setTimeout(()=>b.classList.remove('pick'),1600);
+}
+function pick(el){
+  const all=entries().filter(x=>!x.vars);
+  for(let n=el;n&&n.nodeType===1;n=n.parentElement){
+    const hit=all.filter(x=>{try{return n.matches(x.sel)}catch{return false}}).pop();
+    if(hit){jump(hit);return}
+  }
+}
+fr.addEventListener('load',()=>{live();fit();try{fr.contentDocument.addEventListener('click',ev=>pick(ev.target),true)}catch{}});
 fr.srcdoc=TM_REPLICA;
 function showPane(css){
   $t('#t-pv').hidden=css;$t('#t-css').hidden=!css;

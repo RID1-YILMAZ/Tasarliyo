@@ -10,21 +10,40 @@ const entries=()=>[{id:'root',ad:':root (renk değişkenleri)',sel:':root',vars:
 const any=m=>keys(m||{}).length>0;
 const canon=o=>JSON.stringify(Object.keys(o||{}).sort().map(k=>[k,o[k]&&typeof o[k]==='object'?canon(o[k]):o[k]]));
 const CASC=new Set(['color','background-color','background-image','background-size','background-position','background-repeat','background-attachment']);
+const parseVal=v=>v;
 
 // ---------- CSS üretimi ----------
-function cssOf(w){
+const FORCE=new Set([':hover',':active',':focus',':focus-within']);
+let cur=null,forced=[];
+function blk(sel,o){
   const mn=S.opts.min,nl=mn?'':'\n',ind=mn?'':'  ',sp=mn?'':' ',imp=S.opts.imp?(mn?'!important':' !important'):'';
-  const blk=(sel,o)=>sel+sp+'{'+nl+keys(o).map(k=>ind+k+':'+sp+o[k]+(k.startsWith('--')?'':imp)+';').join(nl)+nl+'}';
-  const out=[];
+  return sel+sp+'{'+nl+keys(o).map(k=>ind+k+':'+sp+o[k]+(k.startsWith('--')?'':imp)+';').join(nl)+nl+'}';
+}
+function cssOf(w){
+  const sp=S.opts.min?'':' ',out=[];
   entries().forEach(e=>{
     if(e.vars){if(any(S.vars[w]))out.push(blk(':root',S.vars[w]));return}
     const m=ST(e.id)[w];
     TM_STATES.forEach(([st])=>{if(any(m[st]))out.push(blk(e.sel.split(',').map(x=>x.trim()+st).join(','+sp),m[st]))});
   });
-  return out.join(nl+nl);
+  return out.join(S.opts.min?'':'\n\n');
 }
 const fr=document.getElementById('t-frame'),$t=s=>document.querySelector(s);
-function live(){try{const s=fr.contentDocument.getElementById('tz-theme');if(s)s.textContent=cssOf('d')}catch{}}
+// Seçili durumu (hover/active/focus) önizlemede zorla göster
+function force(){
+  try{forced.forEach(el=>el.classList.remove('tz-on'));forced=[];
+    if(!cur||cur.vars)return;const t=ST(cur.id);if(!t.open||!FORCE.has(t.st))return;
+    forced=[...fr.contentDocument.querySelectorAll(cur.sel)];forced.forEach(el=>el.classList.add('tz-on'));
+  }catch{}
+}
+function setCur(e){cur=e;force();live()}
+function live(){
+  try{const s=fr.contentDocument.getElementById('tz-theme');if(!s)return;let css=cssOf('d');
+    if(cur&&!cur.vars){const t=ST(cur.id),m=t.d[t.st];
+      if(t.open&&FORCE.has(t.st)&&any(m))css+=(S.opts.min?'':'\n\n')+blk(cur.sel.split(',').map(x=>x.trim()+'.tz-on').join(S.opts.min?',':', '),m)}
+    s.textContent=css;
+  }catch{}
+}
 function flash(e){try{fr.contentDocument.querySelectorAll(e.sel).forEach(el=>{el.classList.remove('tz-hl');void el.offsetWidth;el.classList.add('tz-hl');setTimeout(()=>el.classList.remove('tz-hl'),1400)})}catch{}}
 const isOk=e=>e.vars?(any(S.vars.a)&&canon(S.vars.d)===canon(S.vars.a)):(any(ST(e.id).a)&&canon(ST(e.id).d)===canon(ST(e.id).a));
 function upd(){
@@ -40,14 +59,16 @@ function upd(){
 }
 const refCss=()=>{$t('#t-css').value=cssOf('a');};
 function marks(e){
-  if(e.vars)return;const t=ST(e.id),sel=document.querySelector('#tb-'+e.id+' .t-bar select');if(!sel)return;
-  [...sel.options].forEach((o,i)=>{o.textContent=(any(t.d[TM_STATES[i][0]])?'• ':'')+TM_STATES[i][1]});
+  if(e.vars)return;const t=ST(e.id),b=document.getElementById('tb-'+e.id);if(!b)return;
+  b.querySelectorAll('[data-s]').forEach(x=>{const has=any(t.d[x.dataset.s]);x.classList.toggle('has',has);
+    if(x.tagName==='OPTION')x.textContent=(has?'• ':'')+TM_STATES.find(s=>s[0]===x.dataset.s)[1]});
 }
 function done(e){save();live();upd();if(e)marks(e)}
 
 // ---------- düzenleme ----------
 function setP(e,k,v){
   const del=v==null||v==='';
+  if(!cur||cur.id!==e.id){cur=e;force()}
   if(e.vars){if(del)delete S.vars.d[k];else S.vars.d[k]=v;return done(e)}
   const t=ST(e.id),m=t.d[t.st]||(t.d[t.st]={});
   if(del)delete m[k];else m[k]=v;
@@ -66,11 +87,11 @@ function apply(e){
 }
 function reset(e){
   if(e.vars){S.vars.d={};S.vars.a={}}else{const t=ST(e.id);t.d={};t.a={};t.cascade=false;t.st=''}
-  if(ST(e.id).open||e.vars)TMC.fillBody(e);refCss();done();
+  if(ST(e.id).open||e.vars)TMC.fillBody(e);if(cur&&cur.id===e.id)force();refCss();done();
 }
 function cascadeNow(e){
   const m=ST(e.id).d[''];if(!m)return;
   keys(m).filter(k=>CASC.has(k)).forEach(k=>setP(e,k,m[k]));
 }
-return {S,save,ST,entries,any,keys,HEX,cssOf,fr,$t,live,flash,upd,refCss,done,setP,apply,reset,cascadeNow};
+return {S,save,ST,entries,any,keys,HEX,cssOf,fr,$t,live,flash,upd,refCss,done,setP,apply,reset,cascadeNow,force,setCur,cur:()=>cur};
 })();
