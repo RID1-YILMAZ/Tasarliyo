@@ -81,8 +81,34 @@ function prog(n,fl,v){
   const up=()=>set(n,fl.key,p.value===''?'':p.value+'%;'+(c.value||'#1AF'));
   p.oninput=up;c.oninput=up;return h('span',{class:'cr'},p,c);
 }
+// Buton işlevi: value / menü işlemi (name=menu_action + value) / komut (code)
+function action(n){
+  const mode=()=>n.name==='menu_action'?'menu':n.code!==undefined?'code':n.value!==undefined?'value':'';
+  const sel=h('select',{onchange:()=>{const m=sel.value;
+    if(m!=='menu'&&n.name==='menu_action')delete n.name;
+    if(m==='')['value','code','name'].forEach(k=>delete n[k]);
+    if(m==='value'){delete n.code;if(n.value===undefined)n.value='btn'}
+    if(m==='menu'){delete n.code;n.name='menu_action';n.value='home'}
+    if(m==='code'){delete n.value;delete n.name;if(n.code===undefined)n.code='komut'}
+    props();out()}},
+    ...[['','— işlev yok —'],['value','Bota değer gönder (value)'],['menu','Menü işlemi (menu_action)'],['code','Komut çalıştır (code)']].map(([v,l])=>h('option',{value:v,selected:v===mode()},l)));
+  const bind=(k,ph)=>{const i=h('input',{value:n[k]??'',placeholder:ph,oninput:()=>set(n,k,i.value)});return i};
+  const box=h('div',{class:'act'},sel),m=mode();
+  if(m==='value')box.append(bind('value','değer (ör. A, 1, evet)'),bind('name','ad / name (isteğe bağlı)'));
+  if(m==='code'){box.append(bind('code','komut adı (ör. seviye)'),h('button',{onclick:()=>{n.text='!'+(n.code||'');props();out()}},'Yazıyı !komut yap'))}
+  if(m==='menu'){
+    const cur=String(n.value??''),o0=ISLEM.find(o=>o.ek?cur.startsWith(o.v):o.v===cur);
+    const s2=h('select',{onchange:()=>{const o=ISLEM.find(x=>x.v===s2.value);set(n,'value',o?o.v:'');props()}},
+      ...ISLEM.map(o=>h('option',{value:o.v,selected:o===o0},o.l)),h('option',{value:'',selected:!o0},'Özel değer…'));
+    box.append(s2);
+    if(o0&&o0.ek){const t=h('input',{value:cur.slice(o0.v.length),placeholder:'bölüm adı (ör. roles)',oninput:()=>set(n,'value',o0.v+t.value)});box.append(t)}
+    else if(!o0)box.append(bind('value','özel değer'));
+  }
+  return box;
+}
 function field(n,fl){
   const v=n[fl.key]??'';
+  if(fl.kind==='action')return action(n);
   if(fl.kind==='multi')return multi(n,fl,v);
   if(fl.kind==='progress')return prog(n,fl,v);
   if(fl.kind==='number')return h('input',{type:'number',step:fl.step||1,value:v,oninput:e=>set(n,fl.key,e.target.value===''?'':parseFloat(e.target.value))});
@@ -118,7 +144,7 @@ function props(){
   const n=f.n,d=def(n.type);
   b.append(row('Tür',typeSel(n)));
   d.fields.forEach(fl=>b.append(row(fl.label,field(n,fl))));
-  b.append(extras(n,new Set(['_id','type','children',...d.fields.map(x=>x.key)])));
+  b.append(extras(n,new Set(['_id','type','children',...d.fields.flatMap(x=>x.keys||[x.key])])));
 }
 function mv(d){const f=find(selId);if(!f.p)return;const a=f.p.children,i=a.indexOf(f.n),j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];out()}
 async function copy(btn,label){

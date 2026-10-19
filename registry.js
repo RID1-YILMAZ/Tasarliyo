@@ -1,5 +1,5 @@
 // KAYIT DEFTERİ: yeni bileşen, özellik ya da şablon eklemek = buraya bir satır.
-// kind: text | area | number | color | multi | progress    chips: tıklanınca eklenen hazır değerler
+// kind: text | area | number | color | multi | progress | action    chips: tıklanınca eklenen hazır değerler
 const SEMBOL=['✦','★','●','➤','✔','⚠','🔥','📢','📜','🎉','💰','⭐','🎁','⚙','←','→'];
 const RENK=['#f97316','#38bdf8','#facc15','#c084fc','#4ade80','#f43f5e','#e6e9f2','#10141c'];
 // ui değerleri (açıklamalar örnek kartlardaki kullanımdan çıkarıldı)
@@ -8,6 +8,11 @@ const UI=[
   {v:'space',l:'Kalan alanı doldur'},{v:'box',l:'Çerçeveli kutu'},{v:'muted',l:'Soluk yazı'},{v:'size-1',l:'Küçük ikon'},{v:'size-2',l:'Büyük ikon'}
 ];
 const LOGO='https://cdn.topluyo.com/logo/689af99661b01.svg';
+// Buton işlevleri: örnek kartlarda görülen kullanımlar (menu_action + value). Ne yapacağını bu değerleri okuyan bot belirler.
+const ISLEM=[
+  {v:'home',l:'Ana menü'},{v:'back',l:'Geri'},{v:'close',l:'Kapat'},{v:'settings:home',l:'Ayarlar'},
+  {v:'launcher:run',l:'Ara / çalıştır'},{v:'section:',l:'Bölüm aç…',ek:true}
+];
 const FL={
   text:{key:'text',label:'Metin',kind:'area',chips:SEMBOL},
   ph:{key:'placeholder',label:'İpucu yazısı (placeholder)',kind:'text'},
@@ -17,11 +22,11 @@ const FL={
   gap:{key:'gap',label:'Boşluk (gap)',kind:'number',step:0.05},
   size:{key:'size',label:'Yazı boyutu (size)',kind:'number',step:0.05},
   name:{key:'name',label:'Ad (name)',kind:'text'},
-  value:{key:'value',label:'Değer (value)',kind:'text'},
   code:{key:'code',label:'Kod (code)',kind:'text'},
   src:{key:'src',label:'Görsel adresi (src)',kind:'text'},
   max:{key:'maxlength',label:'En fazla karakter (maxlength)',kind:'number',step:1},
-  prog:{key:'progress',label:'İlerleme (yüzde ve renk)',kind:'progress'}
+  prog:{key:'progress',label:'İlerleme (yüzde ve renk)',kind:'progress'},
+  act:{key:'value',keys:['value','name','code'],label:'Buton işlevi (basınca ne olsun)',kind:'action'}
 };
 const KAP=[FL.text,FL.ui,FL.color,FL.bg,FL.gap,FL.size];
 const GENEL={label:'Özel',container:true,fields:KAP,defaults:{}};
@@ -32,7 +37,7 @@ const REGISTRY={
   'flex-cx':{label:'Yatay (ortalı)',container:true,fields:KAP,defaults:{}},
   grid:{label:'Izgara',container:true,fields:KAP,defaults:{}},
   space:{label:'Metin satırı',container:false,fields:[FL.text,FL.ui,FL.color,FL.bg,FL.size],defaults:{text:'Metin'}},
-  bumote:{label:'Buton',container:true,fields:[FL.text,FL.value,FL.name,FL.code,FL.ui,FL.color,FL.bg,FL.gap,FL.size],defaults:{text:'Buton',value:'btn'}},
+  bumote:{label:'Buton',container:true,fields:[FL.act,FL.text,FL.ui,FL.color,FL.bg,FL.gap,FL.size],defaults:{text:'Buton',value:'btn'}},
   input:{label:'Giriş kutusu',container:false,fields:[FL.text,FL.ph,FL.name,FL.max,FL.ui,FL.color,FL.bg,FL.size],defaults:{text:'Yaz...',name:'alan',ui:'space'}},
   icon:{label:'İkon / görsel',container:false,fields:[FL.src,FL.ui,FL.size],defaults:{src:LOGO,ui:'size-2'}},
   progress:{label:'İlerleme çubuğu',container:true,fields:[FL.prog,FL.ui,FL.color,FL.bg,FL.gap,FL.size],defaults:{progress:'50%;#1AF'}},

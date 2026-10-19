@@ -25,7 +25,7 @@ textarea.bad{border-color:var(--red)}
 .kv{display:flex;gap:6px;margin-bottom:6px;min-width:0}.kv input{flex:1 1 0;min-width:0;width:0}.kv button{flex:none}
 .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.chip{min-width:30px;height:30px;padding:0 8px;border-radius:8px;font-size:12px}.chip.on{background:var(--ac);border-color:var(--ac)}
 .chk{display:flex;gap:6px;align-items:center}.chk input{width:auto}
-#chat{background:#0a0c12;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+#chat{background:#0a0c12;border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:55vh}
 .chead{padding:8px 12px;border-bottom:1px solid var(--line);font-weight:600}
 .msg{display:flex;gap:10px;padding:12px;align-items:flex-start}
 .av{flex:none;width:34px;height:34px;border-radius:50%;background:var(--ac);display:grid;place-items:center;font-style:normal;font-weight:700}
@@ -40,3 +40,4 @@ input.pv{background:#171c26;border:1px solid var(--line);border-radius:.4em;padd
 img.pv{width:auto;object-fit:contain;flex:none}
 #info{margin-top:8px;font-size:13px}#info.ok{color:var(--ok)}#info.bad{color:var(--red)}
 .hint{color:var(--mut);font-size:12px;margin:8px 0 0}
+.act>*{margin-top:6px}.act>*:first-child{margin-top:0}
