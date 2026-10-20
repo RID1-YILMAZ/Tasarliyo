@@ -174,5 +174,5 @@ $t('#t-imp').checked=S.opts.imp;$t('#t-min').checked=S.opts.min;
 $t('#t-imp').onchange=ev=>{S.opts.imp=ev.target.checked;save();live();refCss()};
 $t('#t-min').onchange=ev=>{S.opts.min=ev.target.checked;save();live();refCss()};
 renderAll();refCss();
-window.TM_wall=wall;TMC.fillBody=fillBody;TMC.renderAll=renderAll;TMC.jump=jump;
+window.TM_wall=wall;TMC.fillBody=fillBody;TMC.renderAll=renderAll;TMC.jump=jump;TMC.renderAll=renderAll;TMC.jump=jump;
 })();
