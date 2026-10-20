@@ -1,6 +1,26 @@
 // TEMA ARAYÜZÜ: etiket kutuları, önizleme, düğmeler
 (()=>{
 const {S,save,ST,entries,any,keys,HEX,cssOf,fr,$t,live,flash,upd,refCss,done,setP,apply,reset,cascadeNow,setCur}=TMC;
+const vs=h('select',{id:'t-view',title:'Önizleme görünümü',onchange:()=>setView(vs.value)},...[['','Görünüm: Normal'],['dm','Görünüm: DM paneli açık'],['modal','Görünüm: Pencere (modal) açık']].map(([v,l])=>h('option',{value:v},l)));
+$t('.t-tools').insertBefore(vs,$t('#t-sum'));vs.value=S.view||'';
+const fi=h('input',{id:'t-find',placeholder:'Etiket ara (ör. DM, post-text, menu-item)…',oninput:()=>filt()});
+$t('.t-editor').insertBefore(fi,$t('#t-list'));
+const css=document.createElement('style');
+css.textContent='.t-sec{margin:0 0 8px}.t-sec>summary{cursor:pointer;font-weight:700;color:var(--mut);padding:6px 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase}.t-sec>summary small{background:#ffffff14;border-radius:999px;padding:1px 8px;margin-left:8px;letter-spacing:0}#t-find{width:100%;margin-bottom:8px}#t-view{max-width:210px}';
+document.head.append(css);
+const viewOf=e=>e.g==='DM paneli'||/^(editordm|senddm|rowdm)$/.test(e.id)?'dm':e.g==='Pencere (modal)'?'modal':'';
+function setView(v){
+  S.view=v;save();vs.value=v;
+  try{const b=fr.contentDocument.body;b.classList.toggle('dm',v==='dm');b.classList.toggle('modal',v==='modal')}catch{}
+}
+function filt(){
+  const q=fi.value.trim().toLowerCase(),L=entries();
+  document.querySelectorAll('#t-list details.t-sec').forEach(d=>{
+    let n=0;
+    d.querySelectorAll('.t-box').forEach(b=>{const e=L.find(x=>'tb-'+x.id===b.id),m=!q||(e.ad+' '+e.sel+' '+(e.g||'')).toLowerCase().includes(q);b.hidden=!m;if(m)n++});
+    d.hidden=!n;if(q&&n)d.open=true;
+  });
+}
 function regroup(e,g){
   const b=document.querySelector('#tb-'+e.id+' .t-bodyx');if(!b)return;
   const d=[...b.querySelectorAll('details.t-g')].find(x=>x.firstChild.textContent.startsWith(g.g));if(!d)return;
@@ -84,10 +104,15 @@ function toggle(e){
   save();flash(e);
 }
 function renderAll(){
-  $t('#t-list').replaceChildren(...entries().map(mkBox));
-  $t('#t-pop').replaceChildren(...entries().map(e=>h('button',{onclick:()=>{
-    jump(e);$t('#t-pop').classList.remove('open')}},e.sel)));
-  upd();
+  const by={};
+  entries().forEach(e=>{const g=e.vars?TM_GRP[0]:(e.g||'Özel seçiciler');(by[g]||(by[g]=[])).push(e)});
+  $t('#t-list').replaceChildren(...[...TM_GRP,'Özel seçiciler'].filter(g=>by[g]).map(g=>{
+    const d=h('details',{class:'t-sec'},h('summary',{},g,h('small',{},String(by[g].length))),...by[g].map(mkBox));
+    d.open=!!S.gopen[g]||by[g].some(e=>ST(e.id).open||(e.vars?any(S.vars.d):any(ST(e.id).d)));
+    d.addEventListener('toggle',()=>{S.gopen[g]=d.open;save()});
+    return d}));
+  $t('#t-pop').replaceChildren(...entries().map(e=>h('button',{onclick:()=>{jump(e);$t('#t-pop').classList.remove('open')}},e.ad+'  '+e.sel)));
+  upd();filt();
 }
 function addCustom(){
   const sel=(prompt('CSS seçici (ör. .my-class, [data-x], #id, button:hover):')||'').trim();if(!sel)return;
@@ -105,6 +130,10 @@ const pv=$t('#t-pv');
 function fit(){const w=pv.clientWidth,hh=pv.clientHeight;if(!w)return;const W=w>=1000?w:1000,s=w/W;fr.style.width=W+'px';fr.style.height=(hh/s)+'px';fr.style.transform='scale('+s+')'}
 new ResizeObserver(fit).observe(pv);
 function jump(e){
+  setView(viewOf(e));
+  const b0=document.getElementById('tb-'+e.id);
+  if(b0&&b0.hidden){fi.value='';filt()}
+  const sec=b0&&b0.closest('details.t-sec');if(sec&&!sec.open)sec.open=true;
   const t=ST(e.id);if(!t.open)toggle(e);else setCur(e);
   const b=document.getElementById('tb-'+e.id);b.scrollIntoView({block:'start',behavior:'smooth'});
   b.classList.add('pick');setTimeout(()=>b.classList.remove('pick'),1600);
@@ -116,7 +145,7 @@ function pick(el){
     if(hit){jump(hit);return}
   }
 }
-fr.addEventListener('load',()=>{live();fit();try{fr.contentDocument.addEventListener('click',ev=>pick(ev.target),true)}catch{}});
+fr.addEventListener('load',()=>{live();fit();setView(S.view||'');try{fr.contentDocument.addEventListener('click',ev=>pick(ev.target),true)}catch{}});
 fr.srcdoc=TM_REPLICA;
 function showPane(css){
   $t('#t-pv').hidden=css;$t('#t-css').hidden=!css;

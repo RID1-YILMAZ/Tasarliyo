@@ -3,7 +3,8 @@ const TMC=(()=>{
 const LS='tasarliyo-tema',HEX=/^#[0-9a-f]{6}$/i,keys=Object.keys;
 const S={vars:{d:{},a:{}},tags:{},custom:[],opts:{imp:true,min:false}};
 try{const s=JSON.parse(localStorage.getItem(LS)||'null');if(s&&typeof s==='object')Object.assign(S,s)}catch{}
-S.vars=S.vars||{d:{},a:{}};S.vars.d=S.vars.d||{};S.vars.a=S.vars.a||{};S.tags=S.tags||{};S.custom=S.custom||[];S.opts=Object.assign({imp:true,min:false},S.opts);
+S.vars=S.vars||{d:{},a:{}};S.vars.d=S.vars.d||{};S.vars.a=S.vars.a||{};S.tags=S.tags||{};S.custom=S.custom||[];S.gopen=S.gopen||{};S.view=S.view||'';S.opts=Object.assign({imp:true,min:false},S.opts);
+for(const[o,n]of Object.entries({groupicon:'group',msgtext:'dmtext'}))if(S.tags[o]&&!S.tags[n]){S.tags[n]=S.tags[o];delete S.tags[o]}
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch{}};
 const ST=id=>S.tags[id]||(S.tags[id]={d:{},a:{},st:'',open:false,cascade:false});
 const entries=()=>[{id:'root',ad:':root (renk değişkenleri)',sel:':root',vars:1},...TM_TAGS,...S.custom];
@@ -13,6 +14,18 @@ const CASC=new Set(['color','background-color','background-image','background-si
 const parseVal=v=>v;
 
 // ---------- CSS üretimi ----------
+// Virgülle ayrılmış seçicileri parantez/köşeli parantez/tırnak içindeki virgüllere dokunmadan böler
+function split(s){
+  const o=[];let d=0,q='',c='';
+  for(const ch of s){
+    if(q){c+=ch;if(ch===q)q='';continue}
+    if(ch==='"'||ch==="'"){q=ch;c+=ch;continue}
+    if(ch==='('||ch==='[')d++;if(ch===')'||ch===']')d--;
+    if(ch===','&&!d){o.push(c.trim());c='';continue}
+    c+=ch;
+  }
+  if(c.trim())o.push(c.trim());return o;
+}
 const FORCE=new Set([':hover',':active',':focus',':focus-within']);
 let cur=null,forced=[];
 function blk(sel,o){
@@ -24,7 +37,7 @@ function cssOf(w){
   entries().forEach(e=>{
     if(e.vars){if(any(S.vars[w]))out.push(blk(':root',S.vars[w]));return}
     const m=ST(e.id)[w];
-    TM_STATES.forEach(([st])=>{if(any(m[st]))out.push(blk(e.sel.split(',').map(x=>x.trim()+st).join(','+sp),m[st]))});
+    TM_STATES.forEach(([st])=>{if(any(m[st]))out.push(blk(split(e.sel).map(x=>x+st).join(','+sp),m[st]))});
   });
   return out.join(S.opts.min?'':'\n\n');
 }
@@ -40,7 +53,7 @@ function setCur(e){cur=e;force();live()}
 function live(){
   try{const s=fr.contentDocument.getElementById('tz-theme');if(!s)return;let css=cssOf('d');
     if(cur&&!cur.vars){const t=ST(cur.id),m=t.d[t.st];
-      if(t.open&&FORCE.has(t.st)&&any(m))css+=(S.opts.min?'':'\n\n')+blk(cur.sel.split(',').map(x=>x.trim()+'.tz-on').join(S.opts.min?',':', '),m)}
+      if(t.open&&FORCE.has(t.st)&&any(m))css+=(S.opts.min?'':'\n\n')+blk(split(cur.sel).map(x=>x+'.tz-on').join(S.opts.min?',':', '),m)}
     s.textContent=css;
   }catch{}
 }
@@ -93,5 +106,5 @@ function cascadeNow(e){
   const m=ST(e.id).d[''];if(!m)return;
   keys(m).filter(k=>CASC.has(k)).forEach(k=>setP(e,k,m[k]));
 }
-return {S,save,ST,entries,any,keys,HEX,cssOf,fr,$t,live,flash,upd,refCss,done,setP,apply,reset,cascadeNow,force,setCur,cur:()=>cur};
+return {S,save,ST,entries,any,keys,HEX,cssOf,fr,$t,live,flash,upd,refCss,done,setP,apply,reset,cascadeNow,force,setCur,split,cur:()=>cur};
 })();
