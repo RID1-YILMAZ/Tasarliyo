@@ -83,6 +83,15 @@ Tek tıkla başla:
 
 ---
 
+## Credits
+
+Teşekkürler:
+
+- **[Katrix](https://topluyo.com/@katrixapp?ref=36311)**
+- **[Sirkaptan](https://topluyo.com/@sirkaptan?ref=36311)**
+
+---
+
 ## Bağlantılar
 
 - **Canlı araç:** [rid1-yilmaz.github.io/Tasarliyo](https://rid1-yilmaz.github.io/Tasarliyo/)
