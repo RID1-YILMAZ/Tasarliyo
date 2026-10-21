@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b0d14">
 <title>Tasarlıyo · Topluyo tasarım aracı</title>
-<link rel="stylesheet" href="style.css?v=6">
-<link rel="stylesheet" href="tema.css?v=11">
+<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="tema.css?v=12">
 </head>
 <body>
 <div id="hata" hidden></div>
@@ -28,7 +28,7 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
 <main>
   <section class="wide"><h2>Önizleme (canlı test)</h2>
     <div id="chat"><div class="chead"># sohbet</div>
-      <div class="msg"><i class="av">S</i><div class="body"><b>sen</b> <small>şimdi</small><div id="preV"></div><div id="pv"></div><div id="postV"></div></div></div>
+      <div class="msg"><i class="av">S</i><div class="body"><b>sen</b> <small>şimdi</small><div id="preV"></div><div id="pv"><iframe id="pv-frame" title="Kart önizlemesi" scrolling="no"></iframe></div><div id="postV"></div></div></div>
     </div>
     <div id="info"></div>
     <div class="bar"><button id="bTest" class="pri">Kopyala ve Topluyo'yu aç</button></div>
@@ -40,7 +40,7 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
     <div class="bar"><button id="bIn">+ İçine ekle</button><button id="bAfter">+ Altına ekle</button><button id="bRow">+ Satır</button><button id="bZebra">Zebra</button></div>
     <p class="hint" style="margin:0 0 8px"><b>İçine:</b> seçili öğenin alt öğesi olur. <b>Altına:</b> aynı seviyede, seçilenin hemen altına gelir.</p>
     <div id="tree"></div>
-    <div class="bar"><button id="bUp">↑ Yukarı</button><button id="bDown">↓ Aşağı</button><button id="bOut">← Dışarı al</button><button id="bInd">→ İçeri al</button><button id="bDup">Çoğalt</button><button id="bDel" class="red">Sil</button></div>
+    <div class="bar"><button id="bUp">↑ Yukarı</button><button id="bDown">↓ Aşağı</button><button id="bOut">← Dışarı al</button><button id="bInd">→ İçeri al</button><button id="bDup">Çoğalt</button><button id="bDel" class="red">Sil</button><button id="bReset">Sıfırla</button></div>
   </section>
   <section><h2>Özellikler</h2><div id="props"></div></section>
   <section><h2>Mesaj yazısı</h2>
@@ -59,7 +59,7 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
   <img class="t-banner" src="https://banner.topluyo.com/?text=topluyo.com" alt="topluyo.com" onerror="this.remove()">
   <div class="t-wrap">
     <aside class="t-editor">
-      <div class="t-top"><b>CSS Editör</b><button id="t-reset-all">Varsayılan</button><button id="t-add">+ Seçici</button></div>
+      <div class="t-top"><b>CSS Editör</b><button id="t-reset-all" title="Tüm tema değişikliklerini sil">Sıfırla</button><button id="t-add">+ Seçici</button></div>
       <div id="t-list"></div>
     </aside>
     <section class="t-stage">
@@ -91,14 +91,14 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
 <div id="arayuz" hidden>
   <section class="soon"><h2>Arayüz Tasarla</h2><p class="big">Yakında…</p><p>Bu bölüm hazırlanıyor.</p></section>
 </div>
-<script src="registry.js?v=6"></script>
-<script src="app.js?v=6"></script>
-<script src="tema-veri.js?v=11"></script>
-<script src="tema-ozellik.js?v=11"></script>
-<script src="tema-onizleme.js?v=11"></script>
-<script src="tema-denetim.js?v=11"></script>
-<script src="tema-cekirdek.js?v=11"></script>
-<script src="tema.js?v=11"></script>
-<script src="tema-duzen.js?v=11"></script>
+<script src="registry.js?v=7"></script>
+<script src="app.js?v=7"></script>
+<script src="tema-veri.js?v=12"></script>
+<script src="tema-ozellik.js?v=12"></script>
+<script src="tema-onizleme.js?v=12"></script>
+<script src="tema-denetim.js?v=12"></script>
+<script src="tema-cekirdek.js?v=12"></script>
+<script src="tema.js?v=12"></script>
+<script src="tema-duzen.js?v=12"></script>
 </body>
 </html>

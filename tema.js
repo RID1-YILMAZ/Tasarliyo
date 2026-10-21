@@ -8,7 +8,7 @@ $t('.t-editor').insertBefore(fi,$t('#t-list'));
 const css=document.createElement('style');
 css.textContent='.t-sec{margin:0 0 8px}.t-sec>summary{cursor:pointer;font-weight:700;color:var(--mut);padding:6px 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase}.t-sec>summary small{background:#ffffff14;border-radius:999px;padding:1px 8px;margin-left:8px;letter-spacing:0}#t-find{width:100%;margin-bottom:8px}#t-view{max-width:210px}';
 document.head.append(css);
-const viewOf=e=>e.g==='DM paneli'||/^(editordm|senddm|rowdm)$/.test(e.id)?'dm':e.g==='Pencere (modal)'?'modal':'';
+const viewOf=e=>e.g==='DM paneli'||e.id==='panel'?'dm':e.g==='Pencere (modal)'?'modal':'';
 function setView(v){
   S.view=v;save();vs.value=v;
   try{const b=fr.contentDocument.body;b.classList.toggle('dm',v==='dm');b.classList.toggle('modal',v==='modal')}catch{}
@@ -45,12 +45,27 @@ function extras(e){
   box.append(h('div',{class:'kv'},kk,vv,h('button',{onclick:()=>{const k=kk.value.trim();if(!k||!vv.value.trim())return;setP(e,k,vv.value.trim());fillBody(e)}},'+')));
   return box;
 }
+// #rrggbb / #rgb / #rgba / #rrggbbaa -> renk seçiciye uygun 6 hane
+const hex6=v=>{v=String(v||'').trim();
+  if(/^#[0-9a-f]{6}$/i.test(v))return v.toLowerCase();
+  if(/^#[0-9a-f]{3}$/i.test(v))return '#'+v[1]+v[1]+v[2]+v[2]+v[3]+v[3];
+  if(/^#[0-9a-f]{4}$/i.test(v))return '#'+v[1]+v[1]+v[2]+v[2]+v[3]+v[3];
+  if(/^#[0-9a-f]{8}$/i.test(v))return v.slice(0,7).toLowerCase();
+  return null};
 function varsUI(e){
-  const m=S.vars.d,out=[h('p',{class:'hint'},'Topluyo ön yüzü bu değişkenleri kullanıyorsa tüm temayı tek yerden değiştirir (önizleme taklidi kullanıyor). Boş bırakılanlar çıktıya girmez.')];
-  TM_VARS.forEach(([k,l,d])=>{
-    const t=h('input',{value:m[k]||'',placeholder:d}),c=h('input',{type:'color',value:HEX.test(m[k]||'')?m[k]:(HEX.test(d)?d:'#000000')});
-    t.oninput=()=>{setP(e,k,t.value);if(HEX.test(t.value))c.value=t.value};c.oninput=c.onchange=()=>{t.value=c.value;setP(e,k,c.value)};
-    out.push(h('div',{class:'t-f'},h('label',{class:m[k]?'on':''},l+' ('+k+')'),h('div',{class:'t-cr'},c,t)));
+  const m=S.vars.d,out=[h('p',{class:'hint'},'Topluyo ön yüzü bu değişkenleri <b>body</b> üzerinde kullanıyor; tek yerden değiştirince tüm tema uyar. Boş bırakılanlar çıktıya girmez.')];
+  TM_VARS.forEach(([k,l,d,ty])=>{
+    const cur=m[k]||'',lab=h('label',{class:cur?'on':''},l+' ('+k+')');
+    if(ty==='len'){
+      const t=h('input',{value:cur,placeholder:d,title:'ör. 260px / 3rem / 40%'});
+      t.oninput=()=>setP(e,k,t.value);
+      out.push(h('div',{class:'t-f'},lab,h('div',{class:'t-cr'},t)));
+      return;
+    }
+    const t=h('input',{value:cur,placeholder:d}),c=h('input',{type:'color',value:hex6(cur)||hex6(d)||'#000000'});
+    t.oninput=()=>{setP(e,k,t.value);const x=hex6(t.value);if(x)c.value=x};
+    c.oninput=c.onchange=()=>{t.value=c.value;setP(e,k,c.value)};
+    out.push(h('div',{class:'t-f'},lab,h('div',{class:'t-cr'},c,t)));
   });
   const known=new Set(TM_VARS.map(x=>x[0]));
   keys(m).filter(k=>!known.has(k)).forEach(k=>out.push(h('div',{class:'kv'},h('input',{value:k,disabled:true}),
@@ -91,7 +106,7 @@ function mkBox(e){
     head=h('div',{class:'t-head'},h('span',{class:'t-stat'},'✕'),
       h('span',{class:'t-name',onclick:()=>toggle(e)},h('b',{},e.ad),h('small',{},e.sel)),
       ...(e.custom?[h('button',{class:'red',onclick:()=>delCustom(e)},'Sil')]:[]),
-      h('button',{onclick:()=>reset(e)},'Varsayılan'),h('button',{class:'t-apply',onclick:()=>apply(e)},'Uygula'),
+      h('button',{title:'Bu etiketin değişikliklerini sil',onclick:()=>reset(e)},'Sıfırla'),h('button',{class:'t-apply',onclick:()=>apply(e)},'Uygula'),
       h('button',{class:'t-tg',onclick:()=>toggle(e)},t.open?'▲':'▼'));
   const el=h('div',{class:'t-box'+(t.open?'':' shut'),id:'tb-'+e.id,onmouseenter:()=>flash(e)},head,body);
   if(t.open)fillBody(e,body);
@@ -124,7 +139,6 @@ function resetAll(){
   if(!confirm('Tüm tema (ekli seçiciler dahil) sıfırlansın mı?'))return;
   S.vars={d:{},a:{}};S.tags={};S.custom=[];save();renderAll();refCss();live();
 }
-
 // ---------- önizleme ----------
 const pv=$t('#t-pv');
 function fit(){const w=pv.clientWidth,hh=pv.clientHeight;if(!w)return;const W=w>=1000?w:1000,s=w/W;fr.style.width=W+'px';fr.style.height=(hh/s)+'px';fr.style.transform='scale('+s+')'}

@@ -42,7 +42,6 @@
   .t-wrap{grid-template-columns:minmax(0,1fr)}
   .t-stage{order:-1;top:0;z-index:20;background:var(--bg);padding-top:6px}
   .t-editor{position:static;height:auto;overflow:visible}
-  .t-box{scroll-margin-top:calc(40vh + 160px)}
   #t-pv,#t-css{height:40vh;min-height:240px}
   .t-view+.hint{display:none}
 }

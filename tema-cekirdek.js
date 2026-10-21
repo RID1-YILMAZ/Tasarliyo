@@ -1,13 +1,15 @@
 // TEMA ÇEKİRDEĞİ: durum, CSS üretimi, düzenleme (arayüz tema.js'te)
 const TMC=(()=>{
-const LS='tasarliyo-tema',HEX=/^#[0-9a-f]{6}$/i,keys=Object.keys;
+const LS='tasarliyo-tema',HEX=/^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i,keys=Object.keys;
 const S={vars:{d:{},a:{}},tags:{},custom:[],opts:{imp:true,min:false}};
 try{const s=JSON.parse(localStorage.getItem(LS)||'null');if(s&&typeof s==='object')Object.assign(S,s)}catch{}
 S.vars=S.vars||{d:{},a:{}};S.vars.d=S.vars.d||{};S.vars.a=S.vars.a||{};S.tags=S.tags||{};S.custom=S.custom||[];S.gopen=S.gopen||{};S.view=S.view||'';S.opts=Object.assign({imp:true,min:false},S.opts);
 for(const[o,n]of Object.entries({groupicon:'group',msgtext:'dmtext'}))if(S.tags[o]&&!S.tags[n]){S.tags[n]=S.tags[o];delete S.tags[o]}
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch{}};
 const ST=id=>S.tags[id]||(S.tags[id]={d:{},a:{},st:'',open:false,cascade:false});
-const entries=()=>[{id:'root',ad:':root (renk değişkenleri)',sel:':root',vars:1},...TM_TAGS,...S.custom];
+// Değişkenler base.css'te body üzerinde tanımlı; :root değil.
+const TM_VARSEL='body.theme-dark, body.theme-light';
+const entries=()=>[{id:'root',ad:'Tema değişkenleri (body)',sel:TM_VARSEL,vars:1,g:'Tema değişkenleri'},...TM_TAGS,...S.custom];
 const any=m=>keys(m||{}).length>0;
 const canon=o=>JSON.stringify(Object.keys(o||{}).sort().map(k=>[k,o[k]&&typeof o[k]==='object'?canon(o[k]):o[k]]));
 const CASC=new Set(['color','background-color','background-image','background-size','background-position','background-repeat','background-attachment']);
@@ -35,7 +37,7 @@ function blk(sel,o){
 function cssOf(w){
   const sp=S.opts.min?'':' ',out=[];
   entries().forEach(e=>{
-    if(e.vars){if(any(S.vars[w]))out.push(blk(':root',S.vars[w]));return}
+    if(e.vars){if(any(S.vars[w]))out.push(blk(e.sel,S.vars[w]));return}
     const m=ST(e.id)[w];
     TM_STATES.forEach(([st])=>{if(any(m[st]))out.push(blk(split(e.sel).map(x=>x+st).join(','+sp),m[st]))});
   });

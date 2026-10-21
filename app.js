@@ -29,28 +29,54 @@ function md(s){const f=document.createDocumentFragment();
     else if(m=p.match(/^\[([^\]]+)\]\(([^)]+)\)$/))f.append(/^https?:\/\//.test(m[2])?h('a',{href:m[2],target:'_blank',rel:'noopener'},m[1]):m[1]);
     else if(p)f.append(p)});return f}
 const U=n=>String(n.ui||'').split(',').map(x=>x.trim()).filter(Boolean);
-function view(n){
-  const u=U(n),t=n.type||'';
-  const el=t==='input'?h('input',{class:'pv',disabled:true,placeholder:n.placeholder||n.text||''})
-    :t==='icon'?h('img',{class:'pv',src:n.src||''}):h('div',{class:'pv'});
-  const s=el.style,isDiv=el.tagName==='DIV';
-  if(t==='icon'){s.height=u.includes('size-2')?'2.4em':'1.4em';el.onerror=()=>{s.visibility='hidden'}}
-  const row=t==='flex-x'||t==='flex-cx'||u.includes('flex-x')||u.includes('flex-cx');
-  if(t==='grid'){s.display='grid';s.gridTemplateColumns='repeat(auto-fit,minmax(5.5em,1fr))'}else if(isDiv)s.flexDirection=row?'row':'column';
-  if(t==='flex-cx'||u.includes('flex-cx'))s.alignItems='center';
-  if(u.includes('flex-center')){s.justifyContent='center';s.alignItems='center';s.textAlign='center'}
-  if(u.includes('box'))el.classList.add('bx');
-  if(t==='bumote')el.classList.add('bm');
-  if(u.includes('muted'))el.classList.add('mu');
-  if(t==='space'||u.includes('space'))s.flex='1';
-  if(t==='box'&&u.includes('space')){s.padding='.6em .8em';s.borderRadius='.4em'}
-  const g=parseFloat(n.gap);if(g)s.gap=g+'em';
-  const z=parseFloat(n.size);if(z)s.fontSize=z+'em';
-  if(n.background)s.background=n.background;if(n.color)s.color=n.color;
-  if(t==='progress'){const m=String(n.progress||'').match(/^\s*([\d.]+)\s*%?\s*;?\s*(.*)$/);
-    if(m){const p=Math.min(100,+m[1]),c=m[2]||'#1AF';s.background='linear-gradient(90deg,'+c+' '+p+'%,#1c2230 '+p+'%)'}}
-  if(isDiv){s.whiteSpace='pre-line';if(n.text!=null&&n.text!=='')el.append(String(n.text));(n.children||[]).forEach(c=>el.append(view(c)))}
-  return el;
+// Topluyo'nun base.css'indeki gerçek sınıflar
+const TYPE_CLASS={'flex-x':'marktop-flex-x','flex-y':'marktop-flex-y','flex-cx':'marktop-flex-cx',
+  'grid':'marktop-grid','box':'marktop-box','space':'marktop-space','bumote':'marktop-bumote',
+  'input':'marktop-input','icon':'marktop-icon','progress':'marktop-progress'};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Kartı gerçek Topluyo sınıflarıyla HTML'e çevirir (önizleme iframe'inde gösterilir)
+function cardHtml(n){
+  const t=n.type||'',u=U(n),cls=[...new Set([TYPE_CLASS[t],...u].filter(Boolean))].join(' '),sty=[];
+  const g=parseFloat(n.gap);if(g)sty.push('gap:'+g+'em');
+  const z=parseFloat(n.size);if(z)sty.push('font-size:'+z+'em');
+  if(n.background)sty.push('background:'+n.background);
+  if(n.color)sty.push('color:'+n.color);
+  if(t==='progress'){
+    const m=String(n.progress||'').match(/^\s*([\d.]+)\s*%?\s*;?\s*(.*)$/);
+    const p=m?Math.min(100,Math.max(0,+m[1])):0,c=m&&m[2]?m[2].trim():'#1AF';
+    sty.push('--progress-percent:'+p+'%','--progress-background:'+c);
+  }
+  const at=sty.length?' style="'+sty.join(';')+'"':'';
+  if(t==='icon')return '<img class="'+cls+'" src="'+esc(n.src)+'" alt=""'+at+'>';
+  if(t==='input')return '<div class="'+cls+'" contenteditable="true" placeholder="'+esc(n.placeholder||n.text||'')+'"'+at+'>'+esc(n.text||'')+'</div>';
+  if(t==='bumote'){
+    const a=[];
+    if(n.name!==undefined)a.push(' name="'+esc(n.name)+'"');
+    if(n.value!==undefined)a.push(' value="'+esc(n.value)+'"');
+    if(n.code!==undefined)a.push(' code="'+esc(n.code)+'"');
+    return '<button type="button" class="'+cls+'"'+a.join('')+at+'>'+esc(n.text||'')+'</button>';
+  }
+  const inner=(n.text!=null&&n.text!==''?'<div style="white-space:pre-line">'+esc(n.text)+'</div>':'')+
+    (n.children||[]).map(cardHtml).join('');
+  return '<div class="'+cls+'"'+at+'>'+inner+'</div>';
+}
+// Kart önizleme iframe'i: base.css + topluyo.css yüklenir (gerçek Topluyo görünümü)
+const cardDoc=html=>'<!doctype html><html lang="tr"><head><meta charset="utf-8">'
+  +'<link rel="stylesheet" href="base.css?v=1"><link rel="stylesheet" href="topluyo.css?v=1">'
+  +'<style>body{opacity:1!important;padding:0!important;margin:0!important}</style>'
+  +'</head><body class="theme-dark tz-card"><div class="tz-card-wrap"><div class="tz-msg" id="tz-card">'
+  +(html||'')+'</div></div></body></html>';
+let cardTimer=0,pvReady=false;
+function setCard(html){
+  const f=document.getElementById('pv-frame');if(!f)return;
+  try{const d=f.contentDocument,c=d&&d.getElementById('tz-card');
+    if(c){c.innerHTML=html;pvReady=true;
+      const hh=Math.min(700,(d.body.scrollHeight||120)+16);
+      if(f.style.height!==hh+'px')f.style.height=hh+'px';
+      return}}catch{}
+  if(pvReady)return;
+  clearTimeout(cardTimer);
+  cardTimer=setTimeout(()=>{if(!pvReady)f.srcdoc=cardDoc(html)},160);
 }
 function renderTree(){
   const t=$('#tree');t.innerHTML='';
@@ -60,7 +86,7 @@ function info(ok,m){const i=$('#info');i.className=ok?'ok':'bad';i.textContent=o
 function msg(){const a=$('#preT').value.trim(),b=$('#postT').value.trim();
   return(a?a+'\n':'')+'~'+JSON.stringify(clean(root),null,$('#min').checked?0:2)+(b?'\n'+b:'')}
 function out(keep){
-  renderTree();$('#pv').replaceChildren(view(root));
+  renderTree();setCard(cardHtml(root));
   $('#preV').replaceChildren(md($('#preT').value.trim()));$('#postV').replaceChildren(md($('#postT').value.trim()));
   const t=msg();if(!keep)$('#out').value=t;
   $('#out').classList.remove('bad');info(true,t.length);
@@ -180,6 +206,8 @@ on('#bInd','click',()=>{const f=find(selId);if(!f.p)return;const a=f.p.children,
 on('#bOut','click',()=>{const f=find(selId);if(!f.p||f.p===root)return;const g=find(f.p._id);f.p.children.splice(f.p.children.indexOf(f.n),1);g.p.children.splice(g.p.children.indexOf(g.n)+1,0,f.n);props();out()});
 on('#bDup','click',()=>{const f=find(selId);if(!f.p)return;const c=structuredClone(f.n);tag(c);f.p.children.splice(f.p.children.indexOf(f.n)+1,0,c);selId=c._id;props();out()});
 on('#bDel','click',()=>{const f=find(selId);if(!f.p)return;f.p.children.splice(f.p.children.indexOf(f.n),1);selId=f.p._id;props();out()});
+on('#bReset','click',()=>{if(!confirm('Kart varsayılan şablona dönsün mü?'))return;
+  root=tag(TEMPLATES[0].kur());selId=root._id;$('#preT').value='';$('#postT').value='';props();out()});
 on('#bCopy','click',e=>copy(e.target,'Kopyala'));
 on('#bTest','click',async e=>{await copy(e.target,"Kopyala ve Topluyo'yu aç");window.open('https://topluyo.com','_blank')});
 on('#min','change',()=>out());
@@ -193,3 +221,6 @@ try{const s=JSON.parse(localStorage.getItem('tasarliyo')||'null');
   if(s){if(s.root){root=tag(s.root);$('#preT').value=s.pre||'';$('#postT').value=s.post||''}else root=tag(s)}}catch{}
 if(!root)root=tag(TEMPLATES[0].kur());
 selId=root._id;props();out();
+// Kart önizleme iframe'i: base.css'i yükler, hazır olunca kartı yerleştir
+const pvf=document.getElementById('pv-frame');
+if(pvf){pvf.srcdoc=cardDoc('');pvf.addEventListener('load',()=>{pvReady=true;out(true)})}

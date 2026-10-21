@@ -1,0 +1,78 @@
+/* Topluyo uygulama katmanı.
+   base.css'in ÜSTÜNE yüklenir. base.css'in tanımlamadığı ekran parçalarını stiller.
+   Tema değişkenleri body üzerinde tanımlıdır (base.css):
+   --front --back --primary --primary-text --light --menu-width --header-height            */
+
+body{opacity:1}                       /* base.css: body{opacity:0} — Topluyo bunu JS ile 1 yapar */
+
+/* ---------- yardımcılar ---------- */
+.tz-flex{display:flex;align-items:center;gap:.5em}
+.tz-wrap{flex-wrap:wrap}
+.tz-grow{flex:1;min-width:0}
+.tz-muted{opacity:.75;font-size:.85em}
+
+/* ---------- üst çubuk ---------- */
+header .tz-brand{display:flex;align-items:center;gap:.5em;text-decoration:none;color:var(--front)}
+header .tz-brand img{width:2em;height:2em;border-radius:.5em;object-fit:cover}
+header [icon-button]{font-size:1.15em;line-height:1}
+header .tz-user{display:flex;align-items:center;gap:.4em}
+header .tz-user img{width:2em;height:2em;border-radius:50%;object-fit:cover}
+
+/* ---------- menü ---------- */
+menu-opener{flex:none;width:2.2em;height:2.2em;display:inline-flex;align-items:center;justify-content:center;border-radius:.5em;background:#8883;cursor:pointer;user-select:none;font-size:1em;line-height:1}
+menu-opener:hover{background:#8886}
+menu .menu-H2{opacity:.6;font-size:.85em;letter-spacing:.05em}
+menu a.tz-unread{font-weight:800}
+menu a.tz-voice{opacity:.85}
+dropdown{background:#8882;box-shadow:inset 0 0 0 2px #8882;opacity:.9;padding:0 .5em;border-radius:.25em}
+
+/* ---------- ana alan ---------- */
+main{padding-bottom:0}
+.tz-head{display:flex;align-items:center;gap:.6em;padding:.6em 0;border-bottom:1px solid #8882;position:sticky;top:0;background:var(--back);z-index:2}
+.tz-posts{display:flex;flex-direction:column;gap:.4em;padding:.6em 0 1em}
+.tz-post{display:flex;gap:.6em;align-items:flex-start;padding:.35em .4em;border-radius:.5em}
+.tz-post:hover{background:#8881}
+.tz-post-av{width:2.2em;height:2.2em;border-radius:50%;object-fit:cover;flex:none}
+.tz-post-body{min-width:0;flex:1;display:flex;flex-direction:column;gap:.2em}
+.tz-post-head{display:flex;align-items:baseline;gap:.5em}
+.tz-post-text{line-height:1.5;overflow-wrap:anywhere;white-space:pre-line}
+.tz-post-text a{color:var(--primary)}
+
+/* ---------- mesaj yazma satırı ---------- */
+.tz-editor{display:flex;align-items:center;gap:.5em;position:sticky;bottom:0;padding:.5em 0;background:var(--back);border-top:1px solid #8882}
+.tz-editor .input,.tz-editor input{flex:1;min-width:0}
+.tz-editor .tz-send{width:2.6em;height:2.6em;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:50%}
+
+/* ---------- DM panelı (base.css: <panel> öğesi) ---------- */
+panel{display:none}
+body.dm panel{
+  display:flex;flex-direction:column;gap:.4em;
+  position:fixed;right:.8em;bottom:.8em;width:19em;max-height:22em;
+  z-index:9;padding:.6em;border-radius:.8em;
+  background:var(--back);border:1px solid #8882;box-shadow:0 .3em 1em #0006;
+}
+body.dm panel .tz-dm-head{font-weight:700;padding-bottom:.3em;border-bottom:1px solid #8882}
+body.dm panel .tz-dm{display:flex;flex-direction:column;gap:.1em;max-width:88%;padding:.3em .5em;border-radius:.5em;background:#8881}
+body.dm panel .tz-dm.me{align-self:flex-end;background:#8883}
+body.dm panel .tz-dm b{font-size:.85em}
+
+/* ---------- pencere (modal) ---------- */
+.tz-modal{display:none;position:fixed;inset:0;z-index:30;align-items:center;justify-content:center;background:#0009}
+body.modal .tz-modal{display:flex}
+.tz-modal-box{display:flex;flex-direction:column;gap:.6em;min-width:15em;max-width:90vw;padding:1em;border-radius:.8em;background:var(--back);border:1px solid #8882;box-shadow:0 .5em 1.5em #0008}
+.tz-modal-box h3{margin:0;font-size:1em}
+
+/* ---------- yardımcı sınıf galerisi ---------- */
+.tz-gallery{margin-top:1em;padding-top:.6em;border-top:1px solid #8882}
+.tz-gal-row{display:flex;flex-wrap:wrap;align-items:center;gap:.5em;margin:.4em 0}
+.tz-gal-media{height:9em;overflow:hidden;align-items:flex-start}
+.tz-gal-media>*{flex:none}
+.tz-gal-media .marktop-image,.tz-gal-media .marktop-video,.tz-gal-media .marktop-youtube{height:6em;width:10em}
+
+/* ---------- kart önizlemesi (base.css'li iframe) ---------- */
+body.tz-card{margin:0;padding:0;min-height:100%}
+body.tz-card .tz-card-wrap{padding:.8em;display:flex;flex-direction:column;gap:.4em}
+body.tz-card .tz-msg{align-self:flex-start;max-width:min(100%,32em);padding:.55em .7em;border-radius:.7em;background:#ffffff12}
+body.tz-card .tz-pre,.tz-card .tz-post{opacity:.85;font-size:.9em;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+body.tz-card .tz-pre a,.tz-card .tz-post a{color:var(--primary)}
+body.tz-card .tz-post{margin-top:.3em}
