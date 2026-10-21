@@ -17,7 +17,7 @@ const lb=h('div',{class:'lb'}),ov=h('div',{id:'t-ov',hidden:true},h('div',{class
 pv.append(ov);
 const btn=h('button',{id:'t-edit',title:'Önizlemede seçili öğeyi sürükleyip boyutlandır'},'✥ Taşı / boyutlandır'),
   chk=h('input',{type:'checkbox',id:'t-one'}),lab=h('label',{class:'chk',hidden:true},chk,' Sadece bu öğe');
-$t('.t-tools').insertBefore(btn,$t('#t-sum'));$t('.t-tools').insertBefore(lab,$t('#t-sum'));
+$t('.t-ayar').before(btn);$t('.t-ayar').before(lab);
 
 new ResizeObserver(()=>document.documentElement.style.setProperty('--sh',$t('.t-stage').offsetHeight+'px')).observe($t('.t-stage'));
 const sc=()=>{const m=/scale\(([\d.]+)\)/.exec(fr.style.transform);return m?+m[1]:1};
