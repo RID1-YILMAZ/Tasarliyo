@@ -14,17 +14,17 @@ const _POST=(name,time,body,extra)=>`<div class="tz-post">${_AV}<div class="tz-p
 const TM_REPLICA=`<!doctype html><html lang="tr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="base.css?v=1">
-<link rel="stylesheet" href="topluyo.css?v=1">
+<link rel="stylesheet" href="topluyo.css?v=2">
 <style id="tz-theme"></style></head>
 <body class="theme-dark">
 <header>
-  <menu-opener title="Menüyü aç">☰</menu-opener>
+  <menu-opener aria-label="Menüyü aç">☰</menu-opener>
   <a href="#" class="tz-brand"><img class="marktop-logo" src="${TM_LOGO}" alt=""><span>Topluyo</span></a>
   <span class="space"></span>
-  ${_IB('🔍','title="Ara" tooltip-right="Ara"')}
-  ${_IB('🔔','title="Bildirimler"')}
-  ${_IB('👥','title="Topluluk"')}
-  <span class="tz-user"><img src="${TM_LOGO}" alt="">${_IB('⚙','title="Ayarlar"')}</span>
+  <span tooltip-bottom="Ara">${_IB('🔍','aria-label="Ara"')}</span>
+  ${_IB('🔔','aria-label="Bildirimler"')}
+  ${_IB('👥','aria-label="Topluluk"')}
+  <span class="tz-user"><img src="${TM_LOGO}" alt="">${_IB('⚙','aria-label="Ayarlar"')}</span>
 </header>
 
 <content>
@@ -50,11 +50,11 @@ const TM_REPLICA=`<!doctype html><html lang="tr"><head><meta charset="utf-8">
       ${_POST('rid1-yilmaz','4 gün önce',
         `Ardışık ikinci mesaj, <code class="marktop-code-singleline">kod</code> da var.`)}
       ${_POST('Petyo','3 gün önce',
-        `Kod bloğu örneği:<code class="marktop-code-multiline">console.log("selam");</code>`)}
+        `Kod bloğu örneği:<pre><code class="marktop-code-multiline">console.log("selam");</code></pre>`)}
       ${_POST('Mod','2 gün önce',
         `<div class="marktop-box marktop-flex-y">
           <div class="marktop-flex-cx"><img class="marktop-icon marktop-size-2" src="${TM_LOGO}" alt=""><b class="marktop-muted">GÜNLÜK ÖDÜL</b></div>
-          <div class="marktop-flex-x marktop-space"><span>2.500 Coin</span><button class="marktop-bumote" type="button">Topla</button></div>
+          <div class="marktop-flex-x marktop-space"><span>2.500 Coin</span><span class="marktop-bumote" role="button">Topla</span></div>
           <div class="marktop-grid">
             <div class="marktop-box marktop-muted">A</div>
             <div class="marktop-box marktop-muted">B</div>
@@ -66,24 +66,24 @@ const TM_REPLICA=`<!doctype html><html lang="tr"><head><meta charset="utf-8">
       ${_POST('Sistem','1 gün önce',
         `Gömülü içerik örnekleri:
          <img class="marktop-image" src="${TM_LOGO}" alt="">
-         <div class="marktop-window"><div class="marktop-window-bar"><span class="marktop-window-bar-title">pencere</span><span class="marktop-window-bar-fullscreen"></span><span class="marktop-window-bar-close"></span></div><div class="marktop-window-iframe">Gömülü pencere içeriği</div></div>`)}
+         <div class="marktop-window marktop-size-3"><div class="marktop-window-bar"><span class="marktop-window-bar-title">pencere</span><span class="marktop-window-bar-fullscreen"></span><span class="marktop-window-bar-close"></span></div><div class="marktop-window-iframe">Gömülü pencere içeriği</div></div>`)}
     </div>
 
     <div class="tz-gallery">
       ${_MENU_H2('YARDIMCI SINIFLAR')}
       <div class="tz-gal-row">
-        <span class="flex-x light">flex-x</span><span class="flex-y light">flex-y</span>
-        <span class="flex-cx light">flex-cx</span><span class="flex-cy light">flex-cy</span>
-        <span class="flex-sx light">flex-sx</span><span class="flex-ex light">flex-ex</span>
+        <span class="flex-x light tz-gal-box"><i>1</i><i>2</i><i>3</i></span><span class="flex-y light tz-gal-box"><i>1</i><i>2</i><i>3</i></span>
+        <span class="flex-cx light tz-gal-box"><i>1</i><i>2</i><i>3</i></span><span class="flex-cy light tz-gal-box"><i>1</i><i>2</i><i>3</i></span>
+        <span class="flex-sx light tz-gal-box"><i>1</i><i>2</i><i>3</i></span><span class="flex-ex light tz-gal-box"><i>1</i><i>2</i><i>3</i></span>
       </div>
       <div class="tz-gal-row">
-        <span class="grid-2 light">grid-2</span><span class="grid-3 light">grid-3</span>
-        <span class="grid-4 light">grid-4</span><span class="grid-5 light">grid-5</span>
-        <span class="grid-6 light">grid-6</span>
+        <span class="grid-2 light tz-gal-box"><b>grid-2</b><i>1</i><i>2</i></span><span class="grid-3 light tz-gal-box"><b>grid-3</b><i>1</i><i>2</i><i>3</i></span>
+        <span class="grid-4 light tz-gal-box"><b>grid-4</b><i>1</i><i>2</i><i>3</i><i>4</i></span><span class="grid-5 light tz-gal-box"><b>grid-5</b><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></span>
+        <span class="grid-6 light tz-gal-box"><b>grid-6</b><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i></span>
       </div>
       <div class="tz-gal-row">
         <span class="gap light">gap</span><span class="space light">space</span>
-        <span class="inverse">inverse</span><span class="center">center</span>
+        <span class="inverse">inverse</span><span class="center flex-x tz-gal-box"><i>center</i><i style="height:2.5em">+</i></span>
         <span class="underline">underline</span><span class="padding light">padding</span>
         <span class="padding-1 light">padding-1</span>
       </div>
@@ -95,8 +95,8 @@ const TM_REPLICA=`<!doctype html><html lang="tr"><head><meta charset="utf-8">
         <span class="marktop-space">marktop-space</span><span class="marktop-muted">marktop-muted</span>
       </div>
       <div class="tz-gal-row">
-        ${_GAL('marktop-box')}<button class="marktop-bumote" type="button">marktop-bumote</button>
-        <button class="marktop-button" type="button">marktop-button</button>
+        ${_GAL('marktop-box')}<span class="marktop-bumote" role="button">marktop-bumote</span>
+        <span class="marktop-button" role="button">marktop-button</span>
         <div class="marktop-input" contenteditable="true" placeholder="marktop-input"></div>
       </div>
       <div class="tz-gal-row">
@@ -140,12 +140,12 @@ const TM_REPLICA=`<!doctype html><html lang="tr"><head><meta charset="utf-8">
   <h3>Onay</h3>
   <p>Bu işlemi onaylıyor musun?</p>
   <div grid-form><span>Ad</span><input class="input" type="text" value="Örnek"></div>
-  <dropdown name="ornek"><div class="dropdown-value"><div class="dropdown-value-item">Seç</div></div>
+  <dropdown name="ornek" tabindex="0"><div class="dropdown-value"><div class="dropdown-value-item">Seç</div></div>
     <div class="dropdown-list"><div>Seçenek 1</div><div>Seçenek 2</div></div>
   </dropdown>
   <label class="tz-flex"><input type="checkbox" checked> Onay kutusu</label>
-  <label class="tz-flex"><input type="checkbox" switch="Açık"> Anahtar</label>
-  <div class="tz-flex"><button type="button" class="marktop-bumote">Tamam</button><button type="button" class="marktop-bumote">İptal</button></div>
+  <label class="tz-flex"><input type="checkbox" switch="✓"> Anahtar</label>
+  <div class="tz-flex"><span role="button" class="marktop-bumote">Tamam</span><span role="button" class="marktop-bumote">İptal</span></div>
 </div></div>
 <script>document.addEventListener('click',function(e){if(e.target.closest('menu-opener'))document.body.classList.toggle('hide-menu')});</script>
 </body></html>`;

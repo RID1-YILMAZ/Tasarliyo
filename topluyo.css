@@ -76,3 +76,14 @@ body.tz-card .tz-msg{align-self:flex-start;max-width:min(100%,32em);padding:.55e
 body.tz-card .tz-pre,.tz-card .tz-post{opacity:.85;font-size:.9em;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
 body.tz-card .tz-pre a,.tz-card .tz-post a{color:var(--primary)}
 body.tz-card .tz-post{margin-top:.3em}
+
+/* duzeltmeler */
+body.theme-light .marktop-alert{color:#b00020}body.theme-light .marktop-success{color:#0a7a0a}body.theme-light .marktop-info{color:#0056b3}
+body.theme-dark .marktop-alert{color:#ff6b6b}body.theme-dark .marktop-success{color:#4cd964}body.theme-dark .marktop-info{color:#4da3ff}
+.marktop-bumote,.marktop-button{color:var(--front)}
+pre>.marktop-code-multiline{display:block}
+.tz-gal-box{padding:.25em;gap:.25em;min-width:8em}
+.tz-gal-box>i{font-style:normal;background:#8883;border-radius:.2em;padding:0 .4em;text-align:center}
+.tz-modal-box{width:min(26em,90vw)}
+.tz-modal-box [grid-form]{grid-template-columns:5em 1fr}
+.tz-post-text{white-space:normal}
