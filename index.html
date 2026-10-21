@@ -2,11 +2,11 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b0d14">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090a0e">
 <title>Tasarlıyo · Topluyo tasarım aracı</title>
-<link rel="stylesheet" href="style.css?v=6">
-<link rel="stylesheet" href="tema.css?v=11">
+<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="tema.css?v=10">
 </head>
 <body>
 <div id="hata" hidden></div>
@@ -15,41 +15,66 @@ window.addEventListener('error',function(e){var b=document.getElementById('hata'
 window.addEventListener('unhandledrejection',function(e){var b=document.getElementById('hata');b.hidden=false;b.textContent='Hata: '+(e.reason&&e.reason.message||e.reason)});
 </script>
 <header>
-  <h1>Tasarlıyo</h1>
-  <p>Topluyo sohbet kartlarını ve temalarını tasarla, canlı dene, kodunu kopyala.</p>
-  <nav>
-    <button class="tab on" data-t="metin">✍️ Metin Tasarla</button>
-    <button class="tab" data-t="tema">🎨 Tema Tasarla</button>
-    <button class="tab" data-t="arayuz">🧩 Arayüz Tasarla <small>yakında</small></button>
-  </nav>
+  <div class="brand">
+    <img class="logo" src="img/logo.jpg" alt="Tasarlıyo" width="42" height="42">
+    <div><h1>Tasarlıyo</h1><p>Topluyo sohbet kartlarını ve temalarını tasarla, canlı dene, kodunu kopyala.</p></div>
+  </div>
+  <div class="ust_satir">
+    <div></div>
+    <nav>
+      <button class="tab on" data-t="metin"><i data-ikon="type"></i>Metin Tasarla</button>
+      <button class="tab" data-t="tema"><i data-ikon="palette"></i>Tema Tasarla</button>
+      <button class="tab" data-t="arayuz"><i data-ikon="layout-grid"></i>Arayüz Tasarla</button>
+    </nav>
+    <div class="kunye"><span class="kunye_et"><i data-ikon="users" data-boyut="16"></i>CR:</span><span class="kisi"><i data-ikon="at-sign" data-boyut="14"></i>rid1-yilmaz</span><span class="kisi"><i data-ikon="at-sign" data-boyut="14"></i>sirkaptan</span><span class="kisi"><i data-ikon="at-sign" data-boyut="14"></i>katrixapp</span></div>
+  </div>
 </header>
 
 <div id="metin">
 <main>
-  <section class="wide"><h2>Önizleme (canlı test)</h2>
+  <section class="panel s-prev"><h2>Önizleme (canlı test)</h2>
     <div id="chat"><div class="chead"># sohbet</div>
       <div class="msg"><i class="av">S</i><div class="body"><b>sen</b> <small>şimdi</small><div id="preV"></div><div id="pv"></div><div id="postV"></div></div></div>
     </div>
-    <div id="info"></div>
-    <div class="bar"><button id="bTest" class="pri">Kopyala ve Topluyo'yu aç</button></div>
-    <p class="hint">Yaklaşık görünümdür. Asıl sonuç Topluyo'da görünür.</p>
+    <div class="alt_satir">
+      <div class="alt_sol">
+        <div id="info"></div>
+        <div class="bar"><button id="bTest" class="pri"><i data-ikon="external-link"></i>Kopyala ve Topluyo'yu aç</button></div>
+        <p class="hint">Yaklaşık görünümdür. Asıl sonuç Topluyo'da görünür.</p>
+      </div>
+      <div class="alt_sag">
+        <div class="mini_baslik">Hazır şablonlar</div>
+        <div class="bar tpls" id="sablon"></div>
+      </div>
+    </div>
   </section>
-  <section class="wide"><h2>Hazır şablonlar</h2><div class="bar" id="sablon"></div></section>
-  <section><h2>Yapı</h2>
+  <section class="panel s-tree"><h2>Yapı</h2>
     <div class="bar"><select id="addType"></select></div>
-    <div class="bar"><button id="bIn">+ İçine ekle</button><button id="bAfter">+ Altına ekle</button><button id="bRow">+ Satır</button><button id="bZebra">Zebra</button></div>
+    <div class="gbtn">
+      <button id="bIn"><i data-ikon="plus" data-boyut="16"></i>İçine ekle</button>
+      <button id="bAfter"><i data-ikon="plus" data-boyut="16"></i>Altına ekle</button>
+      <button id="bRow"><i data-ikon="rows" data-boyut="16"></i>Satır</button>
+      <button id="bZebra"><i data-ikon="layers" data-boyut="16"></i>Zebra</button>
+    </div>
     <p class="hint" style="margin:0 0 8px"><b>İçine:</b> seçili öğenin alt öğesi olur. <b>Altına:</b> aynı seviyede, seçilenin hemen altına gelir.</p>
     <div id="tree"></div>
-    <div class="bar"><button id="bUp">↑ Yukarı</button><button id="bDown">↓ Aşağı</button><button id="bOut">← Dışarı al</button><button id="bInd">→ İçeri al</button><button id="bDup">Çoğalt</button><button id="bDel" class="red">Sil</button></div>
+    <div class="gbtn">
+      <button id="bUp"><i data-ikon="arrow-up" data-boyut="16"></i>Yukarı</button>
+      <button id="bDown"><i data-ikon="arrow-down" data-boyut="16"></i>Aşağı</button>
+      <button id="bOut"><i data-ikon="arrow-left" data-boyut="16"></i>Dışarı al</button>
+      <button id="bInd"><i data-ikon="arrow-right" data-boyut="16"></i>İçeri al</button>
+      <button id="bDup"><i data-ikon="copy" data-boyut="16"></i>Çoğalt</button>
+      <button id="bDel" class="red"><i data-ikon="trash" data-boyut="16"></i>Sil</button>
+    </div>
   </section>
-  <section><h2>Özellikler</h2><div id="props"></div></section>
-  <section><h2>Mesaj yazısı</h2>
+  <section class="panel s-props"><h2>Özellikler</h2><div id="props"></div></section>
+  <section class="panel s-msg"><h2>Mesaj yazısı</h2>
     <label class="f"><span>Kartın üstündeki yazı</span><textarea id="preT" rows="2" placeholder="isteğe bağlı"></textarea></label>
-    <label class="f"><span>Kartın altındaki yazı (ör. **[Katıl](https://...)**)</span><textarea id="postT" rows="2" placeholder="isteğe bağlı"></textarea></label>
+    <label class="f" style="margin-bottom:0"><span>Kartın altındaki yazı (ör. **[Katıl](https://...)**)</span><textarea id="postT" rows="2" placeholder="isteğe bağlı"></textarea></label>
   </section>
-  <section><h2>Kod (düzenlenebilir)</h2>
+  <section class="panel s-code"><h2>Kod (düzenlenebilir)</h2>
     <textarea id="out" rows="12" spellcheck="false"></textarea>
-    <div class="bar"><button id="bCopy" class="pri">Kopyala</button><label class="chk"><input type="checkbox" id="min"> Sıkıştır</label></div>
+    <div class="bar"><button id="bCopy" class="pri"><i data-ikon="copy" data-boyut="16"></i>Kopyala</button><label class="chk"><input type="checkbox" id="min"> Sıkıştır</label></div>
     <p class="hint">Koda yazdıkça ya da yapıştırdıkça kart canlı güncellenir. Başında/sonunda yazı olan mesajları da yapıştırabilirsin.</p>
   </section>
 </main>
@@ -59,19 +84,21 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
   <img class="t-banner" src="https://banner.topluyo.com/?text=topluyo.com" alt="topluyo.com" onerror="this.remove()">
   <div class="t-wrap">
     <aside class="t-editor">
-      <div class="t-top"><b>CSS Editör</b><button id="t-reset-all">Varsayılan</button><button id="t-add">+ Seçici</button></div>
+      <div class="t-top"><b>CSS Editör</b><button id="t-reset-all"><i data-ikon="rotate-ccw" data-boyut="15"></i><span class="lb">Varsayılan</span></button><button id="t-add"><i data-ikon="plus" data-boyut="15"></i>Seçici</button></div>
       <div id="t-list"></div>
     </aside>
     <section class="t-stage">
       <div class="t-tools">
-        <button id="t-copy" class="pri">Kopyala</button>
-        <div class="t-popwrap"><button id="t-class">Class ▾</button><div id="t-pop"></div></div>
-        <button id="t-b-css">CSS</button>
-        <button id="t-b-pv" class="on">Önizleme</button>
-        <button id="t-all">Hepsini uygula</button>
-        <label class="chk"><input type="checkbox" id="t-imp" checked> !important</label>
-        <label class="chk"><input type="checkbox" id="t-min"> Sıkıştır</label>
-        <span id="t-sum"></span>
+        <button id="t-copy" class="pri"><i data-ikon="copy" data-boyut="16"></i>Kopyala</button>
+        <div class="t-popwrap"><button id="t-class">Class<i data-ikon="chevron-down" data-boyut="16"></i></button><div id="t-pop"></div></div>
+        <button id="t-b-css"><i data-ikon="code" data-boyut="16"></i>CSS</button>
+        <button id="t-b-pv" class="on"><i data-ikon="eye" data-boyut="16"></i>Önizleme</button>
+        <button id="t-all"><i data-ikon="check-check" data-boyut="16"></i>Hepsini uygula</button>
+        <div class="t-ayar">
+          <label class="chk"><input type="checkbox" id="t-imp" checked> !important</label>
+          <label class="chk"><input type="checkbox" id="t-min"> Sıkıştır</label>
+          <span id="t-sum"></span>
+        </div>
       </div>
       <div class="t-view">
         <div id="t-pv"><iframe id="t-frame" title="Topluyo önizleme"></iframe></div>
@@ -82,27 +109,28 @@ window.addEventListener('unhandledrejection',function(e){var b=document.getEleme
   </div>
   <div class="t-modal" id="t-wall" hidden>
     <div class="t-mbox">
-      <div class="bar"><b>Duvar kâğıdı seç</b><a href="https://unsplash.com/t/wallpapers" target="_blank" rel="noopener">Unsplash</a><a href="https://picsum.photos/" target="_blank" rel="noopener">Picsum</a><button id="t-wall-x">Kapat</button></div>
+      <div class="bar"><b>Duvar kâğıdı seç</b><a href="https://unsplash.com/t/wallpapers" target="_blank" rel="noopener">Unsplash</a><a href="https://picsum.photos/" target="_blank" rel="noopener">Picsum</a><button id="t-wall-x"><i data-ikon="x" data-boyut="16"></i>Kapat</button></div>
       <div id="t-wall-grid"></div>
     </div>
   </div>
 </div>
 
 <div id="arayuz" hidden>
-  <section class="soon"><h2>Arayüz Tasarla</h2><p class="big">Yakında…</p><p>Bu bölüm hazırlanıyor.</p></section>
+  <section class="panel soon"><h2>Arayüz Tasarla</h2><p class="big">Yakında…</p><p>Bu bölüm hazırlanıyor.</p></section>
 </div>
-<script src="registry.js?v=6"></script>
-<script src="app.js?v=6"></script>
-<script src="tema-veri.js?v=11"></script>
-<script src="tema-ozellik.js?v=11"></script>
-<script src="tema-onizleme.js?v=11"></script>
-<script src="tema-denetim.js?v=11"></script>
-<script src="tema-cekirdek.js?v=11"></script>
-<script src="tema-ek.js?v=12"></script>
-<script src="tema-gercek.js?v=12"></script>
-<script src="tema-gercek2.js?v=13"></script>
-<script src="geri-al.js?v=13"></script>
-<script src="tema.js?v=11"></script>
-<script src="tema-duzen.js?v=11"></script>
+<script src="ui.js?v=1"></script>
+<script src="registry.js?v=7"></script>
+<script src="app.js?v=7"></script>
+<script src="tema-veri.js?v=10"></script>
+<script src="tema-ozellik.js?v=10"></script>
+<script src="tema-onizleme.js?v=10"></script>
+<script src="tema-denetim.js?v=10"></script>
+<script src="tema-cekirdek.js?v=10"></script>
+<script src="tema-ek.js?v=14"></script>
+<script src="tema-gercek.js?v=14"></script>
+<script src="tema-gercek2.js?v=14"></script>
+<script src="geri-al.js?v=14"></script>
+<script src="tema.js?v=10"></script>
+<script src="tema-duzen.js?v=14"></script>
 </body>
 </html>
