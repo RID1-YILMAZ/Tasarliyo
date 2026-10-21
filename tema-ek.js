@@ -14,7 +14,7 @@ const hx=(rgb,a)=>a>=1?rgb:rgb+Math.round(a*255).toString(16).padStart(2,'0');
 // --- 2) Mobil önizleme tuşları ---
 const mob=(btn,el,cls)=>{btn.onclick=()=>{btn.classList.toggle('on',el.classList.toggle(cls));try{window.dispatchEvent(new Event('resize'))}catch{}}};
 const b1=h('button',{id:'bMob'},'📱 Mobil');$$('#bTest').parentNode.append(b1);mob(b1,$$('#metin'),'mob');
-const b2=h('button',{id:'t-mob'},'📱 Mobil');$$('.t-tools').insertBefore(b2,$$('#t-sum'));mob(b2,$$('#t-pv'),'mob');
+const b2=h('button',{id:'t-mob'},'📱 Mobil');$$('.t-ayar').before(b2);mob(b2,$$('#t-pv'),'mob');
 // --- 3) Şeffaflık: kart öğeleri (Metin Tasarla) ---
 const P0=props;
 props=function(){
@@ -48,7 +48,7 @@ fr.addEventListener('load',()=>{try{const d=fr.contentDocument,l=d.createElement
 const C1=TMC.cssOf;
 TMC.cssOf=w=>{const c=C1(w),u=GF.filter(f=>c.includes("'"+f+"'"));return(u.length?"@import url('"+gurl(u)+"');\n\n":'')+c};
 // --- 4) Özel buton + pencere (yalnızca CSS ile) ---
-const b3=h('button',{id:'t-cbtn'},'+ Özel buton');$$('.t-tools').insertBefore(b3,$$('#t-sum'));
+const b3=h('button',{id:'t-cbtn'},'+ Özel buton');$$('.t-ayar').before(b3);
 b3.onclick=()=>{
   const par=(prompt('Buton nereye konsun? (CSS seçici)','body > header')||'').trim();if(!par)return;
   const tx=(prompt('Buton yazısı:','✦ Gençliğe Hitabe')||'').trim();if(!tx)return;
