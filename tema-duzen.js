@@ -54,7 +54,7 @@ function place(){
   if(!on||!sel||!sel.el.isConnected||!pv.clientWidth){ov.hidden=true;return}
   const r=sel.el.getBoundingClientRect(),s=sc(),n=sel.n;
   ov.hidden=false;
-  Object.assign(ov.style,{left:r.left*s+'px',top:r.top*s+'px',width:r.width*s+'px',height:r.height*s+'px'});
+  Object.assign(ov.style,{left:(fr.offsetLeft+r.left*s)+'px',top:r.top*s+'px',width:r.width*s+'px',height:r.height*s+'px'});
   lb.textContent=Math.round(r.width)+' × '+Math.round(r.height)+' px'+(n>1&&!chk.checked?' · '+n+' öğe birlikte':'');
   lb.style.top=r.top*s<30?'6px':'-26px';
   const mn=Math.min(r.width,r.height)*s;ov.classList.toggle('sm',mn<70);ov.style.setProperty('--hs',Math.max(12,Math.min(22,mn/3))+'px');
