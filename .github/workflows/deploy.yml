@@ -1,0 +1,27 @@
+name: cPanel Otomatik Deploy
+
+on:
+  push:
+    branches: [ main ] # Hangi dalda (branch) tetikleneceğini belirtir
+
+jobs:
+  web-deploy:
+    name: FTP ile Canlıya Gönder
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu Kopyala
+        uses: actions/checkout@v4
+
+      - name: FTP ile Dosyaları Yükle
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # Sitenin dosyalarının cPanel'de yüklü olduğu ana klasör (Genellikle public_html'dir)
+          server-dir: /public_html/
+          # Git ve gereksiz gizli dosyaların sunucuya gönderilmesini engeller
+          exclude: |
+            **/.git*
+            **/.git/**/*
+            .cpanel.yml
