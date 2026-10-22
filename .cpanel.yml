@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DeploymentRoot=/home/tasarliy/public_html
+    - /bin/cp -R * $DeploymentRoot/
