@@ -50,7 +50,7 @@ nav::-webkit-scrollbar{display:none}
 
 /* ---- Metin sekmesi yerleşimi ---- */
 main{display:grid;gap:16px;padding:18px var(--yan) 64px;grid-template-columns:minmax(0,1fr)}
-@media(min-width:600px){.panel.s-prev,.panel.s-tree{align-self:stretch}.s-prev{display:flex;flex-direction:column}.s-prev #chat{flex:1 1 auto;max-height:70vh;min-height:240px}.panel.s-code{align-self:stretch;display:flex;flex-direction:column}.s-code #out{flex:1 1 auto}}
+@media(min-width:600px){.panel.s-prev,.panel.s-tree{align-self:stretch}.s-prev{display:flex;flex-direction:column}.s-prev #chat{flex:1 1 auto;max-height:70vh;min-height:240px}.s-prev .alt_satir{flex:none}.panel.s-code{align-self:stretch;display:flex;flex-direction:column}.s-code #out{flex:1 1 auto}} /* BUG-3: alt_satir flex:none eklendi, sıkışma önlendi */
 @media(min-width:600px){.s-prev{grid-area:prev}.s-tree{grid-area:tree}.s-props{grid-area:props}.s-msg{grid-area:msg}.s-code{grid-area:code}}
 @media(min-width:600px){main{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"prev tree" "props msg" "props code";grid-template-rows:auto auto 1fr}}
 
@@ -61,8 +61,9 @@ main{display:grid;gap:16px;padding:18px var(--yan) 64px;grid-template-columns:mi
 .soon>h2{justify-content:center;margin:0;border:0}.soon>h2::before{display:none}
 
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
-.bar:first-child{margin-top:0}
-.gbtn{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin:10px 0}
+.bar:first-child{margin-top:0} /* Not: h2+.bar, .mh+.bar ile güçlendirilebilir (BUG-5) */
+h2+.bar,.mh+.bar{margin-top:0}
+.gbtn{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin:10px 0} /* BUG-4: 128px→100px, çok dar ekranda taşma önlendi */
 .gbtn button{width:100%}
 .alt_satir{container-type:inline-size;margin-top:4px}
 .alt_satir::after{content:"";display:block;clear:both}
@@ -70,12 +71,11 @@ main{display:grid;gap:16px;padding:18px var(--yan) 64px;grid-template-columns:mi
 /* geniş kutuda: soldaki blok yüzer, şablonlar yanında ve altında akar (boşluk kalmaz) */
 @container (min-width:560px){
   .alt_sol{float:left;width:268px;margin:0 14px 6px 0}
-  .alt_sag .tpls{display:block}
-  .alt_sag .tpls button{margin:0 6px 6px 0;vertical-align:top}
+  .alt_sag .tpls{display:flex;flex-wrap:wrap} /* BUG-1: display:block flex'i eziyordu, gap çalışmıyordu */
 }
 .mini_baslik{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mut);margin:10px 0 8px}
 .alt_sag .bar{margin:0}
-.tpls{gap:6px}.tpls button{min-height:34px;padding:0 11px;font-size:13px;font-weight:500;background:var(--in)}
+.tpls{display:flex;flex-wrap:wrap;gap:6px}.tpls button{min-height:34px;padding:0 11px;font-size:13px;font-weight:500;background:var(--in)} /* BUG-2: display eksikti, gap çalışmıyordu */
 .tpls button:hover{background:var(--acbg)}
 
 /* ---- düğmeler ---- */
