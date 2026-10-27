@@ -31,25 +31,83 @@ function md(s){const f=document.createDocumentFragment();
 const U=n=>String(n.ui||'').split(',').map(x=>x.trim()).filter(Boolean);
 function view(n){
   const u=U(n),t=n.type||'';
-  const el=t==='input'?h('input',{class:'pv',disabled:true,placeholder:n.placeholder||n.text||''})
-    :t==='icon'?h('img',{class:'pv',src:n.src||''}):h('div',{class:'pv'});
+  // Element oluştur: input, img (icon) ya da div (her şey)
+  const el=t==='input'?h('input',{class:'pv marktop-input',disabled:true,placeholder:n.placeholder||n.text||''})
+    :t==='icon'?h('img',{class:'pv marktop-icon',src:n.src||''}):h('div',{class:'pv'});
   const s=el.style,isDiv=el.tagName==='DIV';
-  if(t==='icon'){s.height=u.includes('size-2')?'2.4em':'1.4em';el.onerror=()=>{s.visibility='hidden'}}
-  const row=t==='flex-x'||t==='flex-cx'||u.includes('flex-x')||u.includes('flex-cx');
-  if(t==='grid'){s.display='grid';s.gridTemplateColumns='repeat(auto-fit,minmax(5.5em,1fr))'}else if(isDiv)s.flexDirection=row?'row':'column';
-  if(t==='flex-cx'||u.includes('flex-cx'))s.alignItems='center';
-  if(u.includes('flex-center')){s.justifyContent='center';s.alignItems='center';s.textAlign='center'}
-  if(u.includes('box'))el.classList.add('bx');
+
+  // --- display: flex/grid (base CSS'e göre) ---
+  if(isDiv){
+    // Tür bazlı layout
+    if(t==='flex-x'){s.display='flex';s.flexDirection='row';}
+    else if(t==='flex-cx'){s.display='flex';s.flexDirection='row';s.alignItems='center';s.justifyContent='center';}
+    else if(t==='flex-y'){s.display='flex';s.flexDirection='column';}
+    else if(t==='grid'){
+      s.display='grid';
+      // ui'da grid-2..6 var mı?
+      const gn=u.map(x=>x.match(/^grid-(\d)$/)).find(Boolean);
+      if(gn)s.gridTemplateColumns='repeat('+gn[1]+',1fr)';
+      else s.gridTemplateColumns='repeat(auto-fit,minmax(5.5em,1fr))';
+    }
+    else{s.display='flex';s.flexDirection='column';} // box, space, bumote, '' hepsi column
+
+    // ui değerlerinden layout override
+    if(u.includes('flex-x')){s.display='flex';s.flexDirection='row';}
+    if(u.includes('flex-cx')){s.display='flex';s.flexDirection='row';s.alignItems='center';s.justifyContent='center';}
+    if(u.includes('flex-cy')){s.display='flex';s.flexDirection='column';s.alignItems='center';s.justifyContent='center';}
+    if(u.includes('flex-y')){s.display='flex';s.flexDirection='column';}
+    if(u.includes('flex-center')){s.display='flex';s.justifyContent='center';s.alignItems='center';s.textAlign='center';}
+    if(u.includes('flex-sx')){s.display='flex';s.flexDirection='row';s.justifyContent='space-between';}
+    // ızgara override
+    const gnU=u.map(x=>x.match(/^grid-(\d)$/)).find(Boolean);
+    if(gnU){s.display='grid';s.flexDirection='';s.gridTemplateColumns='repeat('+gnU[1]+',1fr)';}
+  }
+
+  // --- Sınıf eşleştirmeleri (base CSS'e göre) ---
+  // box → marktop-box (kenarlıklı kutu)
+  if(u.includes('box')||t==='box')el.classList.add('bx');
+  // bumote → marktop-bumote (tıklanabilir buton görünümü)
   if(t==='bumote')el.classList.add('bm');
+  // muted → marktop-muted
   if(u.includes('muted'))el.classList.add('mu');
-  if(t==='space'||u.includes('space'))s.flex='1';
-  if(t==='box'&&u.includes('space')){s.padding='.6em .8em';s.borderRadius='.4em'}
+  // space/flex-1 → flex:1
+  if(t==='space'||u.includes('space')){s.flex='1';}
+  // center → align-items:center
+  if(u.includes('center'))s.alignItems='center';
+
+  // icon boyutu: size-1..8 (base CSS: marktop-size-N = Nem×Nem)
+  if(t==='icon'){
+    const sn=u.map(x=>x.match(/^size-(\d)$/)).find(Boolean);
+    const em=sn?sn[1]:'2';
+    s.width=em+'em';s.height=em+'em';
+    el.style.objectFit='contain';
+    el.onerror=()=>{s.visibility='hidden';}
+  }
+
+  // progress → marktop-progress (::before ile dolgu, JS ::before simüle edemez → gradient bg)
+  if(t==='progress'){
+    const m=String(n.progress||'').match(/^\s*([\d.]+)\s*%?\s*;?\s*(.*)$/);
+    if(m){
+      const p=Math.min(100,+m[1]),c=m[2]||'#1AF';
+      el.classList.add('pv-progress');
+      s.setProperty('--progress-percent',p+'%');
+      s.setProperty('--progress-background',c);
+    }
+  }
+
+  // gap, fontSize
   const g=parseFloat(n.gap);if(g)s.gap=g+'em';
   const z=parseFloat(n.size);if(z)s.fontSize=z+'em';
-  if(n.background)s.background=n.background;if(n.color)s.color=n.color;
-  if(t==='progress'){const m=String(n.progress||'').match(/^\s*([\d.]+)\s*%?\s*;?\s*(.*)$/);
-    if(m){const p=Math.min(100,+m[1]),c=m[2]||'#1AF';s.background='linear-gradient(90deg,'+c+' '+p+'%,#1c2230 '+p+'%)'}}
-  if(isDiv){s.whiteSpace='pre-line';if(n.text!=null&&n.text!=='')el.append(String(n.text));(n.children||[]).forEach(c=>el.append(view(c)))}
+  // arka plan ve renk
+  if(n.background)s.background=n.background;
+  if(n.color)s.color=n.color;
+
+  // İçerik: metin + çocuklar
+  if(isDiv){
+    s.whiteSpace='pre-line';
+    if(n.text!=null&&n.text!=='')el.append(String(n.text));
+    (n.children||[]).forEach(c=>el.append(view(c)));
+  }
   return el;
 }
 function renderTree(){

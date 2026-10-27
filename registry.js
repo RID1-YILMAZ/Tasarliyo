@@ -2,10 +2,21 @@
 // kind: text | area | number | color | multi | progress | action    chips: tıklanınca eklenen hazır değerler
 const SEMBOL=['✦','★','●','➤','✔','⚠','🔥','📢','📜','🎉','💰','⭐','🎁','⚙','←','→'];
 const RENK=['#f97316','#38bdf8','#facc15','#c084fc','#4ade80','#f43f5e','#e6e9f2','#10141c'];
-// ui değerleri (açıklamalar örnek kartlardaki kullanımdan çıkarıldı)
+// ui değerleri — base CSS'e göre tüm düzen seçenekleri
 const UI=[
-  {v:'flex-x',l:'Yatay diz'},{v:'flex-y',l:'Dikey diz'},{v:'flex-cx',l:'Yatay, ortalı'},{v:'flex-center',l:'İçeriği ortala'},
-  {v:'space',l:'Kalan alanı doldur'},{v:'box',l:'Çerçeveli kutu'},{v:'muted',l:'Soluk yazı'},{v:'size-1',l:'Küçük ikon'},{v:'size-2',l:'Büyük ikon'}
+  // flex
+  {v:'flex-x',l:'Yatay diz (row)'},{v:'flex-y',l:'Dikey diz (column)'},
+  {v:'flex-cx',l:'Yatay ortalı (row+center)'},{v:'flex-center',l:'Tam ortalı'},
+  {v:'flex-sx',l:'Yatay, aralarına boşluk'},{v:'flex-cy',l:'Dikey ortalı'},
+  // ızgara
+  {v:'grid-2',l:'2 sütun ızgara'},{v:'grid-3',l:'3 sütun ızgara'},
+  {v:'grid-4',l:'4 sütun ızgara'},{v:'grid-5',l:'5 sütun ızgara'},
+  // genel
+  {v:'space',l:'Kalan alanı doldur (flex:1)'},{v:'center',l:'Öğeleri ortala (align-items)'},
+  {v:'box',l:'Çerçeveli kutu'},{v:'muted',l:'Soluk yazı'},
+  // ikon boyutu
+  {v:'size-1',l:'Küçük (1em)'},{v:'size-2',l:'Orta (2em)'},{v:'size-3',l:'Büyük (3em)'},
+  {v:'size-4',l:'Çok büyük (4em)'}
 ];
 const LOGO='https://cdn.topluyo.com/logo/689af99661b01.svg';
 // Buton işlevleri: örnek kartlarda görülen kullanımlar (menu_action + value). Ne yapacağını bu değerleri okuyan bot belirler.

@@ -162,19 +162,43 @@ input[type=checkbox]:focus-visible{outline:2px solid var(--ac2);outline-offset:2
 .chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
 
 /* ---- sohbet önizlemesi ---- */
-#chat{background:#07080c;border:1px solid var(--line);border-radius:var(--r2);overflow:auto;max-height:55vh}
+#chat{background:#07080c;border:1px solid var(--line);border-radius:var(--r2);overflow:auto;max-height:55vh;
+  /* Base CSS font/renk değişkenleri önizleme için */
+  --front:#e9ebf3;--back:#07080c;--primary:#17E;--primary-text:#FFF;
+  font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.5;color:var(--front)
+}
 .chead{padding:10px 14px;border-bottom:1px solid var(--line);font-weight:700;color:var(--mut)}
 .msg{display:flex;gap:12px;padding:14px;align-items:flex-start}
 .av{flex:none;width:38px;height:38px;border-radius:var(--r2);background:var(--ac);display:grid;place-items:center;font-style:normal;font-weight:700}
 .body{min-width:0;flex:1;overflow:auto}.body small{color:var(--mut)}
 #preV,#postV{white-space:pre-wrap;margin:4px 0}.body a{color:var(--blue)}
 #pv{display:flex;flex-direction:column;margin-top:6px}
-.pv{display:flex;min-width:0}
-.pv.bx{background:#161b26;border:1px solid var(--line);border-radius:.5em;padding:.5em}
-.pv.bm{background:#2a3140;border-radius:.4em;padding:.5em .7em;cursor:pointer}
-.pv.mu{color:#94a3b8}
-input.pv{background:#171c26;border:1px solid var(--line);border-radius:.4em;padding:.5em .7em;color:var(--tx);min-height:0}
-img.pv{width:auto;object-fit:contain;flex:none}
+
+/* ---- Önizleme öğeleri (.pv): base CSS marktop-* sınıflarına paralel ---- */
+.pv{display:flex;flex-direction:column;min-width:0;box-sizing:border-box}
+
+/* .bx → marktop-box: kenarlıklı kutu */
+.pv.bx{background:#161b26;border:1px solid #252a37;border-radius:.25em;padding:.5em}
+
+/* .bm → marktop-bumote: tıklanabilir buton */
+.pv.bm{background:#2a3140;border-radius:.25em;padding:.25em .5em;cursor:pointer;user-select:none;transition:background .2s}
+.pv.bm:hover{background:#363e52}
+.pv.bm:active{transform:scale(.96)}
+
+/* .mu → marktop-muted: soluk yazı */
+.pv.mu{opacity:.8;font-size:.85em}
+
+/* input.pv → marktop-input */
+input.pv{background:#171c26;border:none;outline:1px solid #8884;outline-offset:-1px;border-radius:.25em;padding:.25em .5em;color:var(--tx);min-height:0;font-family:inherit;font-size:inherit}
+
+/* img.pv → marktop-icon / marktop-logo */
+img.pv{object-fit:contain;flex:none;background-repeat:no-repeat;background-size:contain;background-position:center}
+
+/* progress: CSS ::before simülasyonu → JS CSS variable ile */
+.pv.pv-progress{padding:.25em;position:relative;overflow:hidden;background:transparent}
+.pv.pv-progress::before{content:"";position:absolute;z-index:0;left:0;top:0;height:100%;width:var(--progress-percent,0%);background:var(--progress-background,#1AF);border-radius:.25em}
+.pv.pv-progress>*{position:relative}
+
 #info{margin-top:10px;font-size:13px;display:flex;align-items:center;gap:6px}#info.ok{color:var(--ok)}#info.bad{color:var(--red)}
 .hint{color:var(--mut);font-size:12px;margin:10px 0 0;line-height:1.5}
 
